@@ -1,16 +1,18 @@
-# mobile_melioration
+# Мобильное приложение "Мелиорация"
 
-Melioration mobile app
+mobile_melioration
 
-## Getting Started
+## Начало работы
 
-This project is a starting point for a Flutter application.
+Для тестирования - для тестирования данного приложения Вам понадобится либо Android устройство,
+либо Android Studio.
 
-A few resources to get you started if this is your first Flutter project:
+Для тестирования на Android устройстве, Вам необходимо получить APK файл. Его можно запросить
+у разработчиков. 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Для тестирования на компьютере, с помощью Android Studio Вам необходимо: 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Установленная Android Studio.
+2. Установленный плагин Flutter в Android Studio.
+3. Установленный Flutter и Dart на компьютере. 
+
