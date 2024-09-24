@@ -22,7 +22,8 @@ class CardMainFun extends StatelessWidget {
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
           padding: EdgeInsets.all(20),
           child:Column(children: [
-            Row(children: [Icon(icon, size: 20, color: Colors.blueAccent),],),
+            Row(children: [Icon(icon, size: 30, color: const Color.fromARGB(
+                229, 0, 13, 255),),],),
             SizedBox(height: 4),
             Row(children: [Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
             SizedBox(height: 4),

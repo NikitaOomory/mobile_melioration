@@ -30,14 +30,25 @@ class _MainScreenScaffold extends State<MainScreenScaffold>{
         }
       ),
         bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        color: Colors.transparent,
-        child: TextButton(onPressed: (){}, child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-          Icon(Icons.help, color: Colors.grey,),
-          Text(' Служба поддержки', style: TextStyle(color: Colors.grey),)
-        ],)),
+          shape: CircularNotchedRectangle(),
+          color: Colors.transparent,
+          child: TextButton(onPressed: (){}, child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+            Icon(Icons.help, color: Colors.grey,),
+            Text(' Служба поддержки', style: TextStyle(color: Colors.grey),)
+            ],),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return const Color.fromARGB(29, 120, 120, 120); // Цвет фона при нажатии
+                }
+                return null; // Цвет фона по умолчанию (или null для прозрачного фона)
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
