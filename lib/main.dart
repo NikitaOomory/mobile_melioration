@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_melioration/MainScreen/View/scaffold_main_screen.dart';
+
+import 'Router/routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MobileMelioration());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MobileMelioration extends StatelessWidget {
+  const MobileMelioration({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: Colors.pink),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: Color.fromARGB(229, 0, 13, 255)),
         scaffoldBackgroundColor: Colors.white,
       ),
       darkTheme: ThemeData(),
-      home: const MainScreenScaffold(),
+      routes: routes,
     );
   }
 }

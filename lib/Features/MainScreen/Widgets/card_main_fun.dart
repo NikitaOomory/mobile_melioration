@@ -6,7 +6,7 @@ class CardMainFun extends StatelessWidget {
   final String description;
   final Function onTap;
 
-  CardMainFun({
+  const CardMainFun({super.key,
     required this.icon,
     required this.title,
     required this.description,
@@ -17,17 +17,16 @@ class CardMainFun extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4  ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8  ),
         child: Container(
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child:Column(children: [
-            Row(children: [Icon(icon, size: 30, color: const Color.fromARGB(
-                229, 0, 13, 255),),],),
-            SizedBox(height: 4),
-            Row(children: [Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
-            SizedBox(height: 4),
-            Row(children: [Text(description, style: TextStyle(color: Colors.grey),),],),
+            Row(children: [Icon(icon, size: 30, color: const Color.fromARGB(229, 0, 13, 255),),],),
+            const SizedBox(height: 4),
+            Row(children: [Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
+            const SizedBox(height: 4),
+            Row(children: [Text(description, style: const TextStyle(color: Colors.grey),),],),
           ],),
         ),
       ),

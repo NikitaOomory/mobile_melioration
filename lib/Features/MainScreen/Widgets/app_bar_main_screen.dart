@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+class AppBarMainScreen extends StatelessWidget implements PreferredSizeWidget {
+  const AppBarMainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +34,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],),
             const SizedBox(height: 8),
-            const Icon(Icons.agriculture, size: 40, color: Color.fromARGB(255, 0, 8, 131),), // Иконка
+            const Icon(Icons.agriculture, size: 40, color: Color.fromARGB(
+                255, 255, 134, 0),), // Иконка
             const SizedBox(height: 8), //
             const Text('Министерство сельского хозяйства РФ', style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w200,
               ),
             ),
            const SizedBox(height: 4),
