@@ -1,7 +1,10 @@
+import 'package:mobile_melioration/Features/EnterJobApplication/enter_job_application_form.dart';
+import 'package:mobile_melioration/Features/EnterJobApplication/list_enter_job_application.dart';
 import 'package:mobile_melioration/Features/ListApplications/View/list_applications_scaffold.dart';
 import 'package:mobile_melioration/Features/ListTechnical%D0%A1onditions/list_technical_conditions_scaffold.dart';
 import 'package:mobile_melioration/Features/MeliorationObjects/View/object_function_nav_scaffold.dart';
 
+import '../Features/JobApplications/View/job_applications_scaffold.dart';
 import '../Features/MainScreen/View/main_screen_scaffold.dart';
 import '../Features/MeliorationObjects/View/list_melioration_objects_screen_scaffold.dart';
 import '../Features/MeliorationObjects/View/list_objects_in_melio_screen_scaffold.dart';
@@ -15,4 +18,7 @@ final routes = {
   '/list_applications' : (context) => const ListApplicationsScaffold(),
   '/list_technical_conditions' : (context) => const ListTechnicalConditionsScaffold(),
   '/object_fun_nav' : (context) => const ObjectFunctionNavScaffold(),
+  '/job_application' : (context) => const JobApplicationsScaffold(),
+  '/list_enter_job_application' : (context) => const ListEnterJobApplication(),
+  '/enter_job_application_form' : (context) => const EnterJobApplicationForm(),
 };

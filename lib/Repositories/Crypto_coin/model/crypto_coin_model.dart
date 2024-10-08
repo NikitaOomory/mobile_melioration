@@ -3,4 +3,5 @@ class CryptoCoinModel{
   final double priceInUSD;
 
   CryptoCoinModel(this.name, this.priceInUSD);
+
 }

@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Widgets/search_widget.dart';
 
-import '../Widgets/card_melio_objects.dart';
+import '../../../Widgets/card_melio_objects.dart';
 
 class ListObjectsInMelioScreenScaffold extends StatefulWidget{
   const ListObjectsInMelioScreenScaffold({super.key});
@@ -46,21 +47,7 @@ class _ListObjectsInMelioScreenScaffold extends State<ListObjectsInMelioScreenSc
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Поиск...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(color: Colors.blueAccent),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                ),
-              ),
-            ),
+            const SearchWidget(),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
