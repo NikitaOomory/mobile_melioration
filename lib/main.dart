@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'Router/routes.dart';
 
-void main() {
+void main() async{
   runApp(const MobileMelioration());
 }
 
