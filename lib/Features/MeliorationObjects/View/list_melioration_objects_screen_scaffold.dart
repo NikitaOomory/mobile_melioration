@@ -36,3 +36,4 @@ class ListMeliorationObjectsScreenScaffold extends StatelessWidget {
   }
 }
 
+//todo: в реестрах отображаем всё, тащим из локали если нет кэша и соед. с сетью

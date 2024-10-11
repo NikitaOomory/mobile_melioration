@@ -25,6 +25,9 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
   String description = ''; // Описание работ
   List<File> attachedFiles = []; // Список прикрепленных файлов
 
+
+
+
   void _selectStartDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -209,7 +212,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
 
               ElevatedButton(
                 onPressed: (){
-                  status = 'В работе';
+                  status = 'На рассмотрении'; // todo: заменить статусы - поменять местами процедуру в модели.
                   addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, 'startDate', 'endDate', description, 'files', 'techHealth', 'techConditional'));
                   Navigator.of(context).pushNamed('/list_enter_job_application');
                 },
@@ -219,6 +222,11 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
         ),
       ),
     );
+
+
+
+
+
 
   }
 }
