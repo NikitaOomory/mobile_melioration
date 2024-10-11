@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart' show DateFormat;
+
+import '../../Models/melioration_object_model.dart';
 
 class EnterJobApplicationForm extends StatefulWidget{
   const EnterJobApplicationForm({super.key});
@@ -13,7 +16,7 @@ class EnterJobApplicationForm extends StatefulWidget{
 }
 
 class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
-  String status = 'В работе'; // Статус, заполненный заранее
+  String status = 'В проекте'; // Статус, заполненный заранее
   String author = 'Иван Иванов'; // Автор, заполненный заранее
   String meliorativeObject = 'Объект 1'; // Мелиоративный объект, заполненный заранее
   String ein = 'ЕИН: 123456'; // ЕИН объекта, заполненный заранее
@@ -57,6 +60,11 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
         attachedFiles.add(File(result.files.single.path!));
       });
     }
+  }
+
+  Future<void> addTask(MeliorationObjectModel task) async {
+    final box = Hive.box<MeliorationObjectModel>('tasks');
+    await box.add(task);
   }
 
   @override
@@ -191,13 +199,20 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
               SizedBox(height: 16),
 
               ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, 'startDate', 'endDate', description, 'files', 'techHealth', 'techConditional'));
+                  Navigator.of(context).pushNamed('/list_enter_job_application');
+                },
                 child: Text('Сохранить проект'),
               ),
               SizedBox(height: 4),
 
               ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  status = 'В работе';
+                  addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, 'startDate', 'endDate', description, 'files', 'techHealth', 'techConditional'));
+                  Navigator.of(context).pushNamed('/list_enter_job_application');
+                },
                 child: Text('Отправить'),
               ),
             ],),

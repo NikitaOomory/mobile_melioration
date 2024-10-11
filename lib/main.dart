@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:mobile_melioration/Models/melioration_object_adapter.dart';
+import 'package:mobile_melioration/Models/melioration_object_model.dart';
 
 import 'Router/routes.dart';
 
 void main() async{
-  // await Hive.initFlutter();
+  await Hive.initFlutter();
+  Hive.registerAdapter(MeliorationObjectAdapter());
+  await Hive.openBox<MeliorationObjectModel>('tasks');
   runApp(const MobileMelioration());
 }
+
 
 class MobileMelioration extends StatelessWidget {
   const MobileMelioration({super.key});
@@ -17,7 +22,7 @@ class MobileMelioration extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: Color.fromARGB(229, 0, 13, 255)),
+        appBarTheme: AppBarTheme(backgroundColor: Colors.transparent),
         scaffoldBackgroundColor: Colors.white,
       ),
       darkTheme: ThemeData(),

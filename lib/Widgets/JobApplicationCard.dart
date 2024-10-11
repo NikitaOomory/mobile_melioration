@@ -27,15 +27,15 @@ class JobApplicationCard extends StatelessWidget {
           children: [
             // Статус заявки
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
               decoration: BoxDecoration(
                 color: getStatusColor(status),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(40),
               ),
               child: Text(status, style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 15,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w400,
               ),
               ),
             ),
@@ -45,19 +45,19 @@ class JobApplicationCard extends StatelessWidget {
               title,
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w400,
               ),
             ),
             SizedBox(height: 4), // Отступ между названием и номером
             // Номер заявки
             Text(
-              'Номер заявки: $requestNumber',
+              'Номер: $requestNumber',
               style: TextStyle(fontSize: 14),
             ),
             SizedBox(height: 4), // Отступ между номером и датой
             // Дата заявки
             Text(
-              'Дата заявки: $requestDate',
+              'Дата: $requestDate',
               style: TextStyle(fontSize: 14),
             ),
             SizedBox(height: 4), // Отступ между датой и автором
@@ -82,7 +82,7 @@ class JobApplicationCard extends StatelessWidget {
       case 'В проекте':
         return const Color.fromARGB(115, 38, 117, 255);
       default:
-        return Colors.black;
+        return const Color.fromARGB(115, 129, 129, 129);
     }
   }
 }
