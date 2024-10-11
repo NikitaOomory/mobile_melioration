@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Models/my_arguments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/user.dart';
@@ -56,8 +57,6 @@ class _RegestryApplicationState extends State<RegestryApplication> {
 
 
   Future<void> _refreshData() async {
-    // Здесь вы можете добавить логику для обновления данных.
-    // Например, имитация задержки для загрузки данных.
     _applications = [];
     _fetchApplications();
     await Future.delayed(Duration(seconds: 1));
@@ -259,8 +258,10 @@ class _RegestryApplicationState extends State<RegestryApplication> {
                 requestDate: application.startDate,
                 author: application.owner,
                 onTap: () {
-
+                  Navigator.of(context).pushNamed('/enter_job_application_form',
+                      arguments: MyArguments('', '',application, application.objectName));
                 },
+                //todo: роверить переход из реестра на форму заполнения заявки (условие - чтобы с ними ничего нельзя было сделать, т.к. эти заявки уже на сервере)
               );
             },
           ),
