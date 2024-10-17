@@ -1,6 +1,7 @@
 import 'package:mobile_melioration/Views/enter_job_application_form.dart';
 import 'package:mobile_melioration/Views/list_enter_job_application.dart';
 import 'package:mobile_melioration/Views/registry_applications_scaffold.dart';
+import 'package:mobile_melioration/Views/tech_cond_form.dart';
 
 import 'Views/job_applications_scaffold.dart';
 import 'Views/registry_technical_conditions_scaffold.dart';
@@ -21,4 +22,6 @@ final routes = {
   '/job_application' : (context) => const JobApplicationsScaffold(),
   '/list_enter_job_application' : (context) => const ListEnterJobApplication(),
   '/enter_job_application_form' : (context) => const EnterJobApplicationForm(),
+  '/tech_cond_form' : (context) => TechCondForm(),
+
 };

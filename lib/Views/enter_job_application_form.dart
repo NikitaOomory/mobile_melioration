@@ -19,6 +19,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
 
   MeliorationObjectModel? dat;
   int? indexObj;
+  bool isUpdate = false;
 
   String status = 'В проекте'; //Статус, заполненный заранее
   String author = 'Иван Иванов'; //Автор, заполненный заранее
@@ -43,14 +44,26 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
      // startDate = dat!.startDate as DateTime?;
      // endDate = dat!.endDate as DateTime?;
      description = dat!.description;
+     isUpdate = true;
    }
 
    super.didChangeDependencies();
  }
 
- // void saveOrUpdateTask(){
- //   if
- // }
+ void _showSnackbar(BuildContext context) {
+   final snackBar = SnackBar(
+     content: Text('Заявка уже отправлена'),
+     action: SnackBarAction(
+       label: 'Закрыть',
+       onPressed: () {
+         // Код, который будет выполнен при нажатии на кнопку
+       },
+     ),
+   );
+
+   // Показать SnackBar
+   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+ }
 
 
  void _selectStartDate(BuildContext context) async {
@@ -239,9 +252,17 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                       ),
                     ),
                     onPressed: () {
-                      status = 'В проекте';
-                      dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
-                      Navigator.of(context).pushNamed('/list_enter_job_application');
+                      if(isUpdate == false){
+                        status = 'В проекте';
+                        dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
+                        Navigator.of(context).pop('/list_enter_job_application');
+                      }else if (status == 'В проекте'){
+                        dbUtilsMelioObject?.updateTask(indexObj!,
+                            MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
+                        Navigator.of(context).pop('/list_enter_job_application');
+                      }else{
+                        _showSnackbar(context);
+                      }
                     },
                     child: Text('Сохранить проект'), // Текст кнопки
                   ),
@@ -266,11 +287,15 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                       ),
                     ),
                     onPressed: () {
-                      status = 'На рассмотрении';
-                      dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
-                      Navigator.of(context).pushNamed('/list_enter_job_application');
+                      if(status == 'В проекте'){
+                        status = 'На рассмотрении';
+                        dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
+                        Navigator.of(context).pop('/list_enter_job_application');
+                      }else{
+                        _showSnackbar(context);
+                      }
                     },
-                    child: Text('Отправить'), // Текст кнопки
+                    child: Text('Отправить'),
                   ),
                 ),
               ),
@@ -279,10 +304,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
       ),
     );
 
-
-
-
-
-
+    
+    
   }
 }

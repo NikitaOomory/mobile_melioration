@@ -14,7 +14,7 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
 
   List<FunObject> arrayFunction = [
     FunObject(Icons.contact_page_rounded, 'Заявки на работы', 'Создание заявки на выполнение работ', '/list_enter_job_application'),
-    FunObject(Icons.contact_page_rounded, 'Актуализация тех. состояния', 'Внесение изменений о техническом состоянии', ''),
+    FunObject(Icons.contact_page_rounded, 'Актуализация тех. состояния', 'Внесение изменений о техническом состоянии', '/tech_cond_form'),
   ];
   
   @override

@@ -18,12 +18,8 @@ class _SupportScreenScaffold extends State<SupportScreenScaffold>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: array.length,
-        itemBuilder: (context, i) => ListTile(
-          leading: Text(array[i]),
-        ),
-      ),
+      appBar: AppBar(title: Text('Техническая поддержка'),),
+      body:const Center(child: CircularProgressIndicator(),),
     );
   }
 
