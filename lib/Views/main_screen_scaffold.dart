@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Widgets/bottom_app_bar_main.dart';
 
-import '../Modals/model_function_card.dart';
-import '../../../Widgets/app_bar_main_screen.dart';
-import '../../../Widgets/card_main_fun.dart';
-
+import '../Models/model_function_card.dart';
+import '../Widgets/app_bar_main_screen.dart';
+import '../Widgets/card_main_fun.dart';
 
 class MainScreenScaffold extends StatefulWidget{
   const MainScreenScaffold({super.key});
 
   @override
   State<StatefulWidget> createState() => _MainScreenScaffold();
+
 }
 
 class _MainScreenScaffold extends State<MainScreenScaffold>{
@@ -33,29 +34,7 @@ class _MainScreenScaffold extends State<MainScreenScaffold>{
           });
         }
       ),
-        bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          color: Colors.transparent,
-          child: TextButton(onPressed: (){
-            Navigator.of(context).pushNamed('/support');
-          },
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                  (Set<WidgetState> states) {
-                if (states.contains(WidgetState.pressed)) {
-                  return const Color.fromARGB(29, 120, 120, 120); // Цвет фона при нажатии
-                }
-                return null; // Цвет фона по умолчанию (или null для прозрачного фона)
-              },
-            ),
-          ), child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-            Icon(Icons.help, color: Colors.grey,),
-            Text('Служба поддержки', style: TextStyle(color: Colors.grey),)
-            ],),
-        ),
-      ),
+      bottomNavigationBar: const BottomAppBarMain(),
     );
   }
 }

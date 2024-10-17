@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Widgets/search_widget.dart';
 
-import '../../../Widgets/card_melio_objects.dart';
+import '../Widgets/card_melio_objects.dart';
 
 class ListObjectsInMelioScreenScaffold extends StatefulWidget{
   const ListObjectsInMelioScreenScaffold({super.key});
@@ -40,7 +40,12 @@ class _ListObjectsInMelioScreenScaffold extends State<ListObjectsInMelioScreenSc
       appBar: AppBar(
         title: Container(
           alignment: Alignment.centerLeft,
-          child: Text('Сооружения и объекты \n системы $_name'),
+          child: Column(
+            children: [
+              Text('Сооружения и объекты'),
+              Text(_name.toString()),
+            ],
+          ),
         ),
       ),
       body: Padding(
@@ -54,7 +59,7 @@ class _ListObjectsInMelioScreenScaffold extends State<ListObjectsInMelioScreenSc
                   itemCount: 30,
                   itemBuilder: (context, index) => CardMelioObjects(
                     title: 'Мелиоративная система ${index + 1}',
-                    ein: 'ЕИН: ${1000 + index}',
+                    ein: ' ${1000 + index}',
                     onTap: () {
                       Navigator.of(context).pushNamed(
                           '/object_fun_nav', arguments: '${index + 1}');

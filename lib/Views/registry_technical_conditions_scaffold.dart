@@ -13,7 +13,7 @@ class _ListTechnicalConditionsScaffold extends State<ListTechnicalConditionsScaf
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Реестр зарегистрированных изменений'),),
-      body: Center(child: Text('Изменения'),),
+      body: const Center(child: CircularProgressIndicator(),),
     );
   }
 

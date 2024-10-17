@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-import 'melioration_object_model.dart';
+import '../../Models/melioration_object_model.dart';
 
 class MeliorationObjectAdapter extends TypeAdapter<MeliorationObjectModel> {
   @override
@@ -21,9 +21,13 @@ class MeliorationObjectAdapter extends TypeAdapter<MeliorationObjectModel> {
     final files = reader.read() as String;
     final techHealth = reader.read() as String;
     final techConditional = reader.read() as String;
+    final startJobDate = reader.read() as String;
+    final endJobDate = reader.read() as String;
+    final prevUnit = reader.read() as String;
+    final nextUnit = reader.read() as String;
 
     return MeliorationObjectModel(name, typeObject, adress,author,status,ein,startDate,
-    endDate,description,files,techHealth,techConditional);
+    endDate,description,files,techHealth,techConditional, startJobDate, endJobDate, prevUnit, nextUnit);
   }
 
   @override
@@ -40,5 +44,9 @@ class MeliorationObjectAdapter extends TypeAdapter<MeliorationObjectModel> {
     writer.write(obj.files);
     writer.write(obj.techHealth);
     writer.write(obj.techConditional);
+    writer.write(obj.startJobDate);
+    writer.write(obj.endJobDate);
+    writer.write(obj.prevUnit);
+    writer.write(obj.nextUnit);
   }
 }

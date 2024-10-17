@@ -17,6 +17,7 @@ class CardMainFun extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Card(
+        elevation: 8,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8  ),
         child: Container(
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),

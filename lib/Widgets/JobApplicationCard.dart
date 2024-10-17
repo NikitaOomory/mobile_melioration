@@ -6,6 +6,7 @@ class JobApplicationCard extends StatelessWidget {
   final String requestNumber;
   final String requestDate;
   final String author;
+  final Function onTap;
 
   JobApplicationCard({
     required this.status,
@@ -13,15 +14,17 @@ class JobApplicationCard extends StatelessWidget {
     required this.requestNumber,
     required this.requestDate,
     required this.author,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return GestureDetector(onTap: () => onTap(),
+    child: Card(
       elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -69,6 +72,7 @@ class JobApplicationCard extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 

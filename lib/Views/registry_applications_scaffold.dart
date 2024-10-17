@@ -13,7 +13,7 @@ class _ListApplicationsScaffold extends State<ListApplicationsScaffold>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Заявки на работу'),),
-      body: const Center(child: CircularProgressIndicator(),)
+      body: const Center(child: CircularProgressIndicator(),),
     );
   }
 }

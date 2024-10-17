@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mobile_melioration/Repositories/Crypto_coin/model/crypto_coin_model.dart';
+import 'package:mobile_melioration/Models/crypto_coin_model.dart';
 
 class CryptoCoinsRepo{
   Future<List<CryptoCoinModel>> getCoinsList() async{

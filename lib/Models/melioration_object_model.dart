@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 class MeliorationObjectModel {
 
   @HiveField(0)
-  final String name;
+  late final String name;
 
   @HiveField(1)
   final String typeObject;
@@ -15,31 +15,45 @@ class MeliorationObjectModel {
   final String adress;
 
   @HiveField(3)
-  final String author;
+  late final String author;
 
   @HiveField(4)
-  final String status;
+  late final String status;
 
   @HiveField(5)
-  final String ein;
+  late final String ein;
 
   @HiveField(6)
-  final String startDate;
+  late final String startDate;
 
   @HiveField(7)
-  final String endDate;
+  late final String endDate;
 
   @HiveField(8)
-  final String description;
+  late final String description;
 
   @HiveField(9)
-  final String files;
+  late final String files;
 
   @HiveField(10)
   final String techHealth;
 
   @HiveField(11)
   final String techConditional;
+
+  @HiveField(12)
+  final String startJobDate;
+
+  @HiveField(13)
+  final String endJobDate;
+
+  @HiveField(14)
+  final String prevUnit;
+
+  @HiveField(15)
+  final String nextUnit;
+
+
 
   MeliorationObjectModel(
       this.name,
@@ -52,6 +66,11 @@ class MeliorationObjectModel {
       this.endDate,
       this.description,
       this.files,
-      this.techHealth,
-      this.techConditional);
+      this.techHealth, //состояние в процентах
+      this.techConditional, //состояние по словарю
+      this.startJobDate,
+      this.endJobDate,
+      this.prevUnit,
+      this.nextUnit);
 }
+

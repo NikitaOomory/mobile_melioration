@@ -1,12 +1,11 @@
-
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
 
-import '../../Models/melioration_object_model.dart';
+import '../Models/melioration_object_model.dart';
 
 class EnterJobApplicationForm extends StatefulWidget{
   const EnterJobApplicationForm({super.key});
@@ -16,19 +15,45 @@ class EnterJobApplicationForm extends StatefulWidget{
 }
 
 class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
-  String status = 'В проекте'; // Статус, заполненный заранее
-  String author = 'Иван Иванов'; // Автор, заполненный заранее
-  String meliorativeObject = 'Объект 1'; // Мелиоративный объект, заполненный заранее
-  String ein = 'ЕИН: 123456'; // ЕИН объекта, заполненный заранее
+ DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications();
+
+  MeliorationObjectModel? dat;
+  int? indexObj;
+
+  String status = 'В проекте'; //Статус, заполненный заранее
+  String author = 'Иван Иванов'; //Автор, заполненный заранее
+  String meliorativeObject = 'Сооружение 1';// Мелиоративный объект, заполненный заранее
+  String ein = '30Ф-ОРО-0001-ООС-001'; // ЕИН объекта, заполненный заранее
   DateTime? startDate; // Дата начала работ
   DateTime? endDate; // Дата окончания работ
   String description = ''; // Описание работ
   List<File> attachedFiles = []; // Список прикрепленных файлов
 
+ @override
+ void didChangeDependencies() {
+   final args = ModalRoute.of(context)!.settings.arguments;
+
+   if(args is Map<String, dynamic>){
+     dat = args['task'];
+     indexObj = args['index'];
+     status = dat!.status;
+     author = dat!.author;
+     meliorativeObject = dat!.name;
+     ein = dat!.ein;
+     // startDate = dat!.startDate as DateTime?;
+     // endDate = dat!.endDate as DateTime?;
+     description = dat!.description;
+   }
+
+   super.didChangeDependencies();
+ }
+
+ // void saveOrUpdateTask(){
+ //   if
+ // }
 
 
-
-  void _selectStartDate(BuildContext context) async {
+ void _selectStartDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: startDate ?? DateTime.now(),
@@ -65,16 +90,12 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
     }
   }
 
-  Future<void> addTask(MeliorationObjectModel task) async {
-    final box = Hive.box<MeliorationObjectModel>('tasks');
-    await box.add(task);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Форма ввода'),
+        title: Text('Новая заявка на работу'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,11 +105,11 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
             children: [
               // Поле статуса
               TextField(
-                controller: TextEditingController(text: status),
+                controller: TextEditingController(text: status,),
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Статус',
-                  border: OutlineInputBorder(),
+                  border: InputBorder.none,
                 ),
               ),
               SizedBox(height: 16),
@@ -99,7 +120,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Автор',
-                  border: OutlineInputBorder(),
+                  border: InputBorder.none,
                 ),
               ),
               SizedBox(height: 16),
@@ -110,7 +131,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Мелиоративный объект',
-                  border: OutlineInputBorder(),
+                  border: InputBorder.none,
                 ),
               ),
               SizedBox(height: 16),
@@ -121,7 +142,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'ЕИН объекта',
-                  border: OutlineInputBorder(),
+                  border: InputBorder.none,
                 ),
               ),
               SizedBox(height: 16),
@@ -134,7 +155,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                       onTap: () => _selectStartDate(context),
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: 'Период работ (с)',
+                          labelText: 'Период работ с',
                           border: OutlineInputBorder(),
                         ),
                         child: Text(
@@ -145,7 +166,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                       ),
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: GestureDetector(
                       onTap: () => _selectEndDate(context),
@@ -168,13 +189,14 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
 
               // Поле для описания
               TextField(
+                controller: TextEditingController(text: description),
                 maxLines: 5,
                 decoration: InputDecoration(
                   labelText: 'Описание',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  description = value;
+                   description = value;
                 },
               ),
               SizedBox(height: 16),
@@ -201,22 +223,56 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
 
               SizedBox(height: 16),
 
-              ElevatedButton(
-                onPressed: (){
-                  addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, 'startDate', 'endDate', description, 'files', 'techHealth', 'techConditional'));
-                  Navigator.of(context).pushNamed('/list_enter_job_application');
-                },
-                child: Text('Сохранить проект'),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: SizedBox(
+                  width: double.infinity, // Задает ширину кнопки на всю ширину экрана
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.blue, backgroundColor: Colors.white, // Цвет текста (синий)
+                      side: BorderSide(
+                        color: Colors.blue, // Синяя рамка вокруг кнопки
+                        width: 2.0,
+                      ),
+                      shape:  RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5), // Убираем закругление
+                      ),
+                    ),
+                    onPressed: () {
+                      status = 'В проекте';
+                      dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
+                      Navigator.of(context).pushNamed('/list_enter_job_application');
+                    },
+                    child: Text('Сохранить проект'), // Текст кнопки
+                  ),
+                ),
               ),
+
               SizedBox(height: 4),
 
-              ElevatedButton(
-                onPressed: (){
-                  status = 'На рассмотрении'; // todo: заменить статусы - поменять местами процедуру в модели.
-                  addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, 'startDate', 'endDate', description, 'files', 'techHealth', 'techConditional'));
-                  Navigator.of(context).pushNamed('/list_enter_job_application');
-                },
-                child: Text('Отправить'),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: SizedBox(
+                  width: double.infinity, // Задает ширину кнопки на всю ширину экрана
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.blue, backgroundColor: Colors.white, // Цвет текста (синий)
+                      side: BorderSide(
+                        color: Colors.blue, // Синяя рамка вокруг кнопки
+                        width: 2.0,
+                      ),
+                      shape:  RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5), // Убираем закругление
+                      ),
+                    ),
+                    onPressed: () {
+                      status = 'На рассмотрении';
+                      dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
+                      Navigator.of(context).pushNamed('/list_enter_job_application');
+                    },
+                    child: Text('Отправить'), // Текст кнопки
+                  ),
+                ),
               ),
             ],),
         ),

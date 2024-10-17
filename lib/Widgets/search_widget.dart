@@ -12,7 +12,10 @@ class SearchWidget extends StatelessWidget{
           hintText: 'Поиск...',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
-            borderSide: const BorderSide(color: Colors.blueAccent),
+            borderSide: const BorderSide(
+                color: Colors.grey,
+                width: 2,
+            ),
           ),
           filled: true,
           fillColor: Colors.white,
