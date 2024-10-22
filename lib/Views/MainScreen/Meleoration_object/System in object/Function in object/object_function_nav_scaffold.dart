@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../Models/model_function_card.dart';
-import '../../../Widgets/card_main_fun.dart';
+import '../../../../../Models/model_function_card.dart';
+import '../../../../../Widgets/card_main_fun.dart';
 
 class ObjectFunctionNavScaffold extends StatefulWidget{
  const ObjectFunctionNavScaffold({super.key});
@@ -26,7 +26,7 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
           itemBuilder: (context, i){
             FunObject index = arrayFunction[i];
             return CardMainFun(icon: index.icon, title: index.title, description: index.description, onTap: (){
-              Navigator.of(context).pushNamed(index.pageURL);
+              Navigator.of(context).pushNamed( index.pageURL);
             });
           }
       ),

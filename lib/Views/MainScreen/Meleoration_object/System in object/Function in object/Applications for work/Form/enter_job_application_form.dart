@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
 
-import '../Models/melioration_object_model.dart';
+import '../../../../../../../Models/melioration_object_model.dart';
 
 class EnterJobApplicationForm extends StatefulWidget{
   const EnterJobApplicationForm({super.key});
@@ -303,8 +303,5 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
         ),
       ),
     );
-
-    
-    
   }
 }

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Widgets/search_widget.dart';
 
-import '../Widgets/card_melio_objects.dart';
+import '../../../../Widgets/card_melio_objects.dart';
 
 class ListObjectsInMelioScreenScaffold extends StatefulWidget{
   const ListObjectsInMelioScreenScaffold({super.key});
@@ -43,7 +43,7 @@ class _ListObjectsInMelioScreenScaffold extends State<ListObjectsInMelioScreenSc
           child: Column(
             children: [
               Text('Сооружения и объекты'),
-              Text(_name.toString()),
+              Text(_name.toString(), maxLines: 2,),
             ],
           ),
         ),
