@@ -4,9 +4,12 @@ class CardMelioObjects extends StatelessWidget {
 
   final String title;
   final String ein;
+  final String ref;
   final VoidCallback onTap;
 
-  const CardMelioObjects({super.key, required this.title, required this.ein, required this.onTap});
+
+
+  CardMelioObjects({ required this.title, required this.ein, required this.onTap, required this.ref});
 
   @override Widget build(BuildContext context) {
     return GestureDetector(
@@ -31,6 +34,11 @@ class CardMelioObjects extends StatelessWidget {
                     Text(ein),
                   ],
                 ),
+                Row(
+                  children: [
+                    Text('Ref $ref'),
+                  ],
+                )
               ],),
         ),
       ),

@@ -14,12 +14,8 @@ void main() async{
   runApp(const MobileMelioration());
 }
 
-
 class MobileMelioration extends StatelessWidget {
    const MobileMelioration({super.key});
-
-
-
 
   @override
   Widget build(BuildContext context) {

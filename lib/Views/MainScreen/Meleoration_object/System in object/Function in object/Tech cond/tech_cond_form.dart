@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_melioration/Models/melioration_object_model.dart';
 
 class TechCondForm extends StatefulWidget {
   @override
@@ -10,6 +13,26 @@ class TechCondForm extends StatefulWidget {
 class _TechCondFormState extends State<TechCondForm> {
   final TextEditingController _wearController = TextEditingController();
   String? _selectedCondition;
+  int num = 0;
+  String ref = '';
+
+  @override
+  void didChangeDependencies() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if(args == null){
+      log('You must provide args');
+      return;
+    }
+    if(args is! String){
+      log('You must provide String args');
+      return;
+    }
+    ref = args;
+    setState(() {
+
+    });
+    super.didChangeDependencies();
+  }
 
   final List<String> _conditions = [
     'Нормативное',
@@ -19,6 +42,44 @@ class _TechCondFormState extends State<TechCondForm> {
     'Требующее капитального ремонта',
     'Подлежащие ликвидации',
   ];
+
+  final Dio _dio = Dio();
+
+  Future<void> _sendReclamationData(String tech, String num) async {
+    final String url =
+        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteReclamationSystem';
+    String username = 'tropin'; // Учетные данные
+    String password = '1234'; // Учетные данные
+
+    // Тело запроса
+    final Map<String, dynamic> requestBody = {
+      "ref": ref,
+      "TechnicalCondition": tech,
+      "ActualWear": num
+    };
+
+    try {
+      final response = await _dio.post(
+        url,
+        data: jsonEncode(requestBody), // Отправка тела запроса
+        options: Options(
+          headers: {
+            'Authorization':
+            'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+            'Content-Type': 'application/json', // Указываем тип контента
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Response data: ${response.data}'); // Выводим ответ в консоль
+      } else {
+        print('Ошибка: ${response.statusCode}'); // Выводим статус ошибки
+      }
+    } catch (e) {
+      print('Ошибка: $e'); // Обработка ошибок
+    }
+  }
 
   void _showSnackbar(BuildContext context) {
     final snackBar = SnackBar(
@@ -40,7 +101,7 @@ class _TechCondFormState extends State<TechCondForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Актуализация тех. состояния'),
+        title: Text(ref),
       ),
       body: ListView(
         children: [
@@ -135,19 +196,20 @@ class _TechCondFormState extends State<TechCondForm> {
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: SizedBox(
-                    width: double.infinity, // Задает ширину кнопки на всю ширину экрана
+                    width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.blue, backgroundColor: Colors.white, // Цвет текста (синий)
+                        foregroundColor: Colors.blue, backgroundColor: Colors.white,
                         side: BorderSide(
-                          color: Colors.blue, // Синяя рамка вокруг кнопки
+                          color: Colors.blue,
                           width: 2.0,
                         ),
                         shape:  RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5), // Убираем закругление
+                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                       onPressed: () {
+                          _sendReclamationData(_selectedCondition.toString(), _wearController.toString());
                           _showSnackbar(context);
                           Navigator.of(context).pop('/object_fun_nav');
                       },

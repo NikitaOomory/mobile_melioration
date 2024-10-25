@@ -72,8 +72,7 @@ class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationOb
   }
 
   Future<void> _fetchReclamations() async {
-    final String url =
-        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getReclamationSystem';
+    final String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getReclamationSystem';
     String username = 'tropin'; // Замените на ваши учетные данные
     String password = '1234'; // Замените на ваши учетные данные
 
@@ -175,10 +174,10 @@ class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationOb
                   (p) => p['name']['#value'] == 'TechnicalCondition',
               orElse: () => {'Value': {'#value': 'N/A'}})['Value']
           ['#value'];
-          return CardMelioObjects(title: name, ein: id, onTap: (){Navigator.of(context).pushNamed('/list_object_in_melio',
-                          arguments: name);
-          }
-          );
+          return CardMelioObjects(title: name, ein: id,
+              onTap: (){
+            Navigator.of(context).pushNamed('/list_object_in_melio', arguments: ref.toString());},
+              ref: ref);
         },
       ),
     ),

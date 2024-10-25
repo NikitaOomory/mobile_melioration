@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
@@ -12,12 +14,31 @@ class ListEnterJobApplication extends StatefulWidget{
 
 class _ListEnterJobApplication extends State<ListEnterJobApplication>{
 
+  String ref = '';
+
+  @override
+  void didChangeDependencies() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if(args == null){
+      log('You must provide args');
+      return;
+    }
+    if(args is! String){
+      log('You must provide String args');
+      return;
+    }
+    ref = args;
+    setState(() {
+
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Заявки на работу'),
+        title: Text(ref),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,7 +55,7 @@ class _ListEnterJobApplication extends State<ListEnterJobApplication>{
         ),
       ),
       floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.of(context).pushNamed('/enter_job_application_form');
+        Navigator.of(context).pushNamed('/enter_job_application_form', arguments: ref);
       }, child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: CupertinoColors.activeBlue,
 

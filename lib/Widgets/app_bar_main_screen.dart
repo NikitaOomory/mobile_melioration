@@ -9,7 +9,7 @@ class AppBarMainScreen extends StatelessWidget implements PreferredSizeWidget {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/img.png'),
+            image: AssetImage('assets/image.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -69,8 +69,8 @@ class AppBarMainScreen extends StatelessWidget implements PreferredSizeWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Васильев Никита Сергеевич'),
-          content: const Text('Организация: ООО Оомори'), // Название роли
+          title: const Text('Тропин Александр Александрович'),
+          content: const Text('Роль: ИТР ФГБУ'), // Название роли
           actions: [
             TextButton(
               onPressed: () {

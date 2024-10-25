@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -17,6 +20,8 @@ class EnterJobApplicationForm extends StatefulWidget{
 class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
  DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications();
 
+  String ref = '';
+
   MeliorationObjectModel? dat;
   int? indexObj;
   bool isUpdate = false;
@@ -30,24 +35,81 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
   String description = ''; // Описание работ
   List<File> attachedFiles = []; // Список прикрепленных файлов
 
+ // @override
+ // void didChangeDependencies() {
+ //   final args = ModalRoute.of(context)!.settings.arguments;
+ //
+ //   if(args is Map<String, dynamic>){
+ //     dat = args['task'];
+ //     indexObj = args['index'];
+ //     status = dat!.status;
+ //     author = dat!.author;
+ //     meliorativeObject = dat!.name;
+ //     ein = dat!.ein;
+ //     // startDate = dat!.startDate as DateTime?;
+ //     // endDate = dat!.endDate as DateTime?;
+ //     description = dat!.description;
+ //     isUpdate = true;
+ //   }
+ //
+ //   super.didChangeDependencies();
+ // }
+
  @override
  void didChangeDependencies() {
-   final args = ModalRoute.of(context)!.settings.arguments;
-
-   if(args is Map<String, dynamic>){
-     dat = args['task'];
-     indexObj = args['index'];
-     status = dat!.status;
-     author = dat!.author;
-     meliorativeObject = dat!.name;
-     ein = dat!.ein;
-     // startDate = dat!.startDate as DateTime?;
-     // endDate = dat!.endDate as DateTime?;
-     description = dat!.description;
-     isUpdate = true;
+   final args = ModalRoute.of(context)?.settings.arguments;
+   if(args == null){
+     log('You must provide args');
+     return;
    }
+   if(args is! String){
+     log('You must provide String args');
+     return;
+   }
+   ref = args;
+   setState(() {
 
+   });
    super.didChangeDependencies();
+ }
+
+ final Dio _dio = Dio();
+
+ Future<void> _sendApplicationForWork(String description) async {
+   final String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteApplicationForWork';
+   String username = 'tropin'; // Замените на ваши учетные данные
+   String password = '1234'; // Замените на ваши учетные данные
+
+   // Тело запроса
+   final Map<String, dynamic> requestBody = {
+     "ReclamationSystem": "714eef76-f80a-11ee-8b19-000c299808dc",
+     "HydraulicStructure": "bf900d22-92d4-11ef-9dfa-005056907678",
+     "startDate": "2024-01-10T00:00:00-05:00",
+     "startJobDate": "2024-02-21T00:00:00-05:00",
+     "endJobDate": "2024-03-25T00:00:00-05:00",
+     "description": description,
+   };
+
+   try {
+     final response = await _dio.post(
+       url,
+       data: jsonEncode(requestBody), // Отправка тела запроса
+       options: Options(
+         headers: {
+           'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+           'Content-Type': 'application/json', // Указываем тип контента
+         },
+       ),
+     );
+
+     if (response.statusCode == 200) {
+       print('Response data: ${response.data}'); // Выводим ответ в консоль
+     } else {
+       print('Ошибка: ${response.statusCode}'); // Выводим статус ошибки
+     }
+   } catch (e) {
+     print('Ошибка: $e'); // Обработка ошибок
+   }
  }
 
  void _showSnackbar(BuildContext context) {
@@ -116,6 +178,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(ref),
               // Поле статуса
               TextField(
                 controller: TextEditingController(text: status,),
@@ -290,6 +353,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                       if(status == 'В проекте'){
                         status = 'На рассмотрении';
                         dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
+                        _sendApplicationForWork(description);
                         Navigator.of(context).pop('/list_enter_job_application');
                       }else{
                         _showSnackbar(context);
