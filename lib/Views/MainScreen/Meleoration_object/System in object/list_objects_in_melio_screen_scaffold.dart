@@ -3,78 +3,10 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Models/my_arguments.dart';
 import 'package:mobile_melioration/Widgets/search_widget.dart';
 
 import '../../../../Widgets/card_melio_objects.dart';
-
-// class ListObjectsInMelioScreenScaffold extends StatefulWidget{
-//   const ListObjectsInMelioScreenScaffold({super.key});
-//
-//   @override
-//   State<StatefulWidget> createState() => _ListObjectsInMelioScreenScaffold();
-// }
-//
-// class _ListObjectsInMelioScreenScaffold extends State<ListObjectsInMelioScreenScaffold>{
-//
-//   String? _name;
-//
-//   @override
-//   void didChangeDependencies() {
-//     final args = ModalRoute.of(context)?.settings.arguments;
-//     if(args == null){
-//       log('You must provide args');
-//       return;
-//     }
-//     if(args is! String){
-//       log('You must provide String args');
-//       return;
-//     }
-//     _name = args;
-//     setState(() {
-//
-//     });
-//     super.didChangeDependencies();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Container(
-//           alignment: Alignment.centerLeft,
-//           child: Column(
-//             children: [
-//               Text('Сооружения и объекты'),
-//               Text(_name.toString(), maxLines: 2,),
-//             ],
-//           ),
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             const SearchWidget(),
-//             const SizedBox(height: 16),
-//             Expanded(
-//               child: ListView.builder(
-//                   itemCount: 30,
-//                   itemBuilder: (context, index) => CardMelioObjects(
-//                     title: 'Мелиоративная система ${index + 1}',
-//                     ein: ' ${1000 + index}',
-//                     onTap: () {
-//                       Navigator.of(context).pushNamed(
-//                           '/object_fun_nav', arguments: '${index + 1}');
-//                     },
-//                   )
-//               ),
-//             ),
-//           ],),
-//       ),
-//     );
-//   }
-// }
-
 
 class ListObjectsInMelioScreenScaffold extends StatefulWidget {
   @override
@@ -165,17 +97,20 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Объекты рекламационной системы'),
+        title: Text(
+            'Сооружения и объекты системы $refValue',
+        maxLines: 2,
+        textAlign: TextAlign.start,),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _objects.isEmpty
-          ? Center(child: Text('Нет данных для отображения'))
+          ? Center(child: Text('В данной системе нет объектов', style: TextStyle(fontSize: 18),))
           : Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const SearchWidget(),
+                SearchWidget(),
                 const SizedBox(height: 16),
                 Expanded( child: ListView.builder(
                   itemCount: _objects.length,
@@ -190,7 +125,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
                       orElse: () => {'Value': {'#value': 'N/A'}},
                     )['Value']['#value'];
                     return CardMelioObjects(title: type, ein: ref, onTap:(){
-                      Navigator.of(context).pushNamed('/object_fun_nav', arguments: ref);
+                      Navigator.of(context).pushNamed('/object_fun_nav', arguments: MyArguments(ref, refValue!, '', ''));
                     }, ref: ref);
         },
       ),

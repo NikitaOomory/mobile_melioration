@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Models/my_arguments.dart';
 
 import '../../../../../Models/model_function_card.dart';
 import '../../../../../Widgets/card_main_fun.dart';
@@ -20,19 +21,21 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
   ];
 
   String ref = '';
+  String refValue = '';
 
   @override
   void didChangeDependencies() {
-    final args = ModalRoute.of(context)?.settings.arguments;
+    final MyArguments args = ModalRoute.of(context)?.settings.arguments as MyArguments;
     if(args == null){
       log('You must provide args');
       return;
     }
-    if(args is! String){
+    if(args.param1 is! String){
       log('You must provide String args');
       return;
     }
-    ref = args;
+    ref = args.param1;
+    refValue = args.param2;
     setState(() {
 
     });
@@ -42,13 +45,14 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(ref),),
+      appBar: AppBar(title: Text('Сооружение $ref, системы $refValue',
+      maxLines: 3, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),),
       body: ListView.builder(
           itemCount: arrayFunction.length,
           itemBuilder: (context, i){
             FunObject index = arrayFunction[i];
             return CardMainFun(icon: index.icon, title: index.title, description: index.description, onTap: (){
-              Navigator.of(context).pushNamed( index.pageURL, arguments: ref.toString());
+              Navigator.of(context).pushNamed( index.pageURL, arguments: MyArguments(ref, refValue, '', ''));
             });
           }
       ),

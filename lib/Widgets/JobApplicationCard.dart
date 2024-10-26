@@ -85,6 +85,12 @@ class JobApplicationCard extends StatelessWidget {
         return const Color.fromARGB(115, 168, 168, 168);
       case 'В проекте':
         return const Color.fromARGB(115, 38, 117, 255);
+      case 'На доработке':
+        return const Color.fromARGB(255, 255, 134, 0);
+      case 'Выполнено':
+        return const Color.fromARGB(100, 0, 131, 25);
+      case 'На рассмотрении':
+        return const Color.fromARGB(255, 175, 219, 255);
       default:
         return const Color.fromARGB(115, 129, 129, 129);
     }

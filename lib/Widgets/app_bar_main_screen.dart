@@ -47,7 +47,7 @@ class AppBarMainScreen extends StatelessWidget implements PreferredSizeWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(100, 0, 13, 255),
+              color: const Color.fromARGB(131, 0, 78, 167),
               borderRadius: BorderRadius.circular(30),
             ),
             child: const Text('Мелиорация', style: TextStyle(

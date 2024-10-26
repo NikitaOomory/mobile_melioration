@@ -9,6 +9,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
 
 import '../../../../../../../Models/melioration_object_model.dart';
+import '../../../../../../../Models/my_arguments.dart';
 
 class EnterJobApplicationForm extends StatefulWidget{
   const EnterJobApplicationForm({super.key});
@@ -20,10 +21,8 @@ class EnterJobApplicationForm extends StatefulWidget{
 class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
  DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications();
 
-  String ref = '';
-
   MeliorationObjectModel? dat;
-  int? indexObj;
+  int? indexObj =1;
   bool isUpdate = false;
 
   String status = 'В проекте'; //Статус, заполненный заранее
@@ -35,38 +34,22 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
   String description = ''; // Описание работ
   List<File> attachedFiles = []; // Список прикрепленных файлов
 
- // @override
- // void didChangeDependencies() {
- //   final args = ModalRoute.of(context)!.settings.arguments;
- //
- //   if(args is Map<String, dynamic>){
- //     dat = args['task'];
- //     indexObj = args['index'];
- //     status = dat!.status;
- //     author = dat!.author;
- //     meliorativeObject = dat!.name;
- //     ein = dat!.ein;
- //     // startDate = dat!.startDate as DateTime?;
- //     // endDate = dat!.endDate as DateTime?;
- //     description = dat!.description;
- //     isUpdate = true;
- //   }
- //
- //   super.didChangeDependencies();
- // }
+ String ref = '';
+ String refValue = '';
 
  @override
  void didChangeDependencies() {
-   final args = ModalRoute.of(context)?.settings.arguments;
+   final MyArguments args = ModalRoute.of(context)?.settings.arguments as MyArguments;
    if(args == null){
      log('You must provide args');
      return;
    }
-   if(args is! String){
+   if(args.param1 is! String){
      log('You must provide String args');
      return;
    }
-   ref = args;
+   ref = args.param1;
+   refValue = args.param2;
    setState(() {
 
    });
@@ -82,11 +65,11 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
 
    // Тело запроса
    final Map<String, dynamic> requestBody = {
-     "ReclamationSystem": "714eef76-f80a-11ee-8b19-000c299808dc",
-     "HydraulicStructure": "bf900d22-92d4-11ef-9dfa-005056907678",
-     "startDate": "2024-01-10T00:00:00-05:00",
-     "startJobDate": "2024-02-21T00:00:00-05:00",
-     "endJobDate": "2024-03-25T00:00:00-05:00",
+     "ReclamationSystem": refValue,
+     "HydraulicStructure": ref,
+     "startDate": "2024-10-26T00:00:00-05:00",
+     "startJobDate": "2024-10-26T00:00:00-05:00",
+     "endJobDate": "2024-10-30T00:00:00-05:00",
      "description": description,
    };
 
@@ -178,7 +161,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(ref),
+              Text('подсистема $ref системы $refValue'),
               // Поле статуса
               TextField(
                 controller: TextEditingController(text: status,),
@@ -305,9 +288,9 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                   width: double.infinity, // Задает ширину кнопки на всю ширину экрана
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.blue, backgroundColor: Colors.white, // Цвет текста (синий)
+                      foregroundColor: Color.fromARGB(255, 0, 78, 167), backgroundColor: Colors.white, // Цвет текста (синий)
                       side: BorderSide(
-                        color: Colors.blue, // Синяя рамка вокруг кнопки
+                        color: Color.fromARGB(255, 0, 78, 167), // Синяя рамка вокруг кнопки
                         width: 2.0,
                       ),
                       shape:  RoundedRectangleBorder(
@@ -340,9 +323,9 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                   width: double.infinity, // Задает ширину кнопки на всю ширину экрана
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.blue, backgroundColor: Colors.white, // Цвет текста (синий)
+                      foregroundColor: Color.fromARGB(255, 0, 78, 167), backgroundColor: Colors.white, // Цвет текста (синий)
                       side: BorderSide(
-                        color: Colors.blue, // Синяя рамка вокруг кнопки
+                        color: Color.fromARGB(255, 0, 78, 167), // Синяя рамка вокруг кнопки
                         width: 2.0,
                       ),
                       shape:  RoundedRectangleBorder(

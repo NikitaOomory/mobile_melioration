@@ -15,7 +15,7 @@ class CardMelioObjects extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Card(
-        elevation: 8,
+        elevation: 5,
         margin: const EdgeInsets.symmetric(horizontal: 0.5, vertical: 8  ),
         child: Container(
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),

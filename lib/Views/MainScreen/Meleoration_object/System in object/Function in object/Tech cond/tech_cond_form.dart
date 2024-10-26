@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../../../Models/my_arguments.dart';
+
 class TechCondForm extends StatefulWidget {
   @override
   _TechCondFormState createState() => _TechCondFormState();
@@ -13,21 +15,22 @@ class TechCondForm extends StatefulWidget {
 class _TechCondFormState extends State<TechCondForm> {
   final TextEditingController _wearController = TextEditingController();
   String? _selectedCondition;
-  int num = 0;
   String ref = '';
+  String refValue = '';
 
   @override
   void didChangeDependencies() {
-    final args = ModalRoute.of(context)?.settings.arguments;
+    final MyArguments args = ModalRoute.of(context)?.settings.arguments as MyArguments;
     if(args == null){
       log('You must provide args');
       return;
     }
-    if(args is! String){
+    if(args.param1 is! String){
       log('You must provide String args');
       return;
     }
-    ref = args;
+    ref = args.param1;
+    refValue = args.param2;
     setState(() {
 
     });
@@ -37,7 +40,7 @@ class _TechCondFormState extends State<TechCondForm> {
   final List<String> _conditions = [
     'Нормативное',
     'Работоспособное',
-    'Ограниченно работоспособное',
+    'ОграниченноРаботоспособное',
     'Аварийное',
     'Требующее капитального ремонта',
     'Подлежащие ликвидации',
@@ -55,7 +58,7 @@ class _TechCondFormState extends State<TechCondForm> {
     final Map<String, dynamic> requestBody = {
       "ref": ref,
       "TechnicalCondition": tech,
-      "ActualWear": num
+      "ActualWear": 56,
     };
 
     try {
@@ -101,7 +104,7 @@ class _TechCondFormState extends State<TechCondForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref),
+        title: Text('Актуализация тех. состояния'),
       ),
       body: ListView(
         children: [
@@ -111,7 +114,7 @@ class _TechCondFormState extends State<TechCondForm> {
               children: [
 
                 TextField(
-                  controller: TextEditingController(text: 'Система №1',),
+                  controller: TextEditingController(text: refValue,),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Мелиоративная система',
@@ -121,7 +124,7 @@ class _TechCondFormState extends State<TechCondForm> {
                 SizedBox(height: 16),
 
                 TextField(
-                  controller: TextEditingController(text: 'Оросительная система'),
+                  controller: TextEditingController(text: 'система'),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Вид объекта',
@@ -132,7 +135,7 @@ class _TechCondFormState extends State<TechCondForm> {
 
                 // Поле мелиоративного объекта
                 TextField(
-                  controller: TextEditingController(text: 'Сооружение №3'),
+                  controller: TextEditingController(text: ref),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Сооружение',
@@ -142,8 +145,8 @@ class _TechCondFormState extends State<TechCondForm> {
                 SizedBox(height: 16),
 
                 TextField(
-                  maxLines: 3,
-                  controller: TextEditingController(text: 'г. Москва, Октябрьский район, ул. Советская, д.23,1'),
+                  maxLines: 1,
+                  controller: TextEditingController(text: 'не указано'),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Местоположение',
@@ -153,7 +156,7 @@ class _TechCondFormState extends State<TechCondForm> {
 
                 // Поле ЕИН объекта
                 TextField(
-                  controller: TextEditingController(text: '30Ф-ОРО-0001-ООС-001'),
+                  controller: TextEditingController(text: refValue),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'ЕИН объекта',
@@ -194,14 +197,14 @@ class _TechCondFormState extends State<TechCondForm> {
                 ),
                 SizedBox(height: 16.0),
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(0.0),
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.blue, backgroundColor: Colors.white,
+                        foregroundColor: Color.fromARGB(255, 0, 78, 167), backgroundColor: Colors.white,
                         side: BorderSide(
-                          color: Colors.blue,
+                          color: Color.fromARGB(255, 0, 78, 167),
                           width: 2.0,
                         ),
                         shape:  RoundedRectangleBorder(

@@ -16,10 +16,10 @@ final routes = {
   '/support' : (context) => const SupportScreenScaffold(),
   '/list_melioration_systems' : (context) => ListMeliorationObjectsScreenScaffold(),
   '/list_object_in_melio' : (context) =>  ListObjectsInMelioScreenScaffold(),
-  '/list_applications' : (context) => const ListApplicationsScaffold(),
+  '/list_applications' : (context) =>  ListApplicationsScaffold(),
   '/list_technical_conditions' : (context) => const ListTechnicalConditionsScaffold(),
   '/object_fun_nav' : (context) => const ObjectFunctionNavScaffold(),
-  '/list_enter_job_application' : (context) => const ListEnterJobApplication(),
+  '/list_enter_job_application' : (context) =>  ListEnterJobApplication(),
   '/enter_job_application_form' : (context) => const EnterJobApplicationForm(),
   '/tech_cond_form' : (context) => TechCondForm(),
 };
