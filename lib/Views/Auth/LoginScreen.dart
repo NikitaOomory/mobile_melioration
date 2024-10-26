@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Widgets/MelioButton.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -50,31 +51,91 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Авторизация'),
+        title: Text('Министерство сельского хозяйства Российской Федерации',
+        maxLines: 2, textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 18),),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Имя пользователя'),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(61, 146, 236, 255)
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Card(
+              color: Colors.white,
+              elevation: 5,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Добро пожаловать!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 78, 167),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Авторизируйтесь, чтобы получить доступ к системе',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: 'Логин',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Пароль',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: (){
+                        login(_usernameController.text, _passwordController.text);
+                      },
+                      child: Text(
+                        "Войти",
+                        style: TextStyle(
+                          color: Colors.white, // Цвет текста
+                          fontSize: 16, // Размер текста
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 0, 78, 167), // Цвет фона кнопки
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Закругление краёв
+                        ),
+                        minimumSize: Size(double.infinity, 40), // Ширина кнопки
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Пароль'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                final username = _usernameController.text;
-                final password = _passwordController.text;
-                login(username, password);
-              },
-              child: Text('Войти'),
-            ),
-          ],
+          ),
         ),
       ),
     );
