@@ -163,7 +163,7 @@ class _ListApplicationsScaffoldState extends State<ListApplicationsScaffold> {
                   break;
               }
             }
-            return JobApplicationCard(status: status, title: hydraulicStructure, requestNumber: number, requestDate: startDate, author: owner, onTap: (){});
+            return JobApplicationCard(status: status, title: 'Заявка $number', requestNumber: number, requestDate: startDate, author: owner, onTap: (){});
           },
         ),
       ),

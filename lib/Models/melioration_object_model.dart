@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 
-
-
 @HiveType(typeId: 0)
 class MeliorationObjectModel {
 
@@ -52,8 +50,6 @@ class MeliorationObjectModel {
 
   @HiveField(15)
   final String nextUnit;
-
-
 
   MeliorationObjectModel(
       this.name,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_melioration/Repositories/crypto_coins_repo.dart';
-import 'package:mobile_melioration/Models/crypto_coin_model.dart';
+
 
 class SupportScreenScaffold extends StatefulWidget{
   const SupportScreenScaffold({super.key});

@@ -17,6 +17,7 @@ class _TechCondFormState extends State<TechCondForm> {
   String? _selectedCondition;
   String ref = '';
   String refValue = '';
+  String nameOb='';
 
   @override
   void didChangeDependencies() {
@@ -31,6 +32,7 @@ class _TechCondFormState extends State<TechCondForm> {
     }
     ref = args.param1;
     refValue = args.param2;
+    nameOb = args.param3;
     setState(() {
 
     });
@@ -135,7 +137,8 @@ class _TechCondFormState extends State<TechCondForm> {
 
                 // Поле мелиоративного объекта
                 TextField(
-                  controller: TextEditingController(text: ref),
+                  maxLines: 2,
+                  controller: TextEditingController(text: nameOb),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Сооружение',

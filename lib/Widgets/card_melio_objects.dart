@@ -34,11 +34,6 @@ class CardMelioObjects extends StatelessWidget {
                     Text(ein),
                   ],
                 ),
-                Row(
-                  children: [
-                    Text('Ref $ref'),
-                  ],
-                )
               ],),
         ),
       ),

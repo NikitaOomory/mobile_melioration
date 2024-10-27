@@ -18,15 +18,18 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
   List<dynamic> _objects = [];
   bool _isLoading = true;
   String? refValue;
+  String nameS = '';
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Получаем значение ref из аргументов
-    refValue = ModalRoute.of(context)?.settings.arguments as String?;
+    MyArguments? myArguments = ModalRoute.of(context)?.settings.arguments as MyArguments?;
 
     // Проверяем, получили ли мы значение ref
-    if (refValue != null) {
+    if (myArguments != null) {
+      refValue = myArguments.param1;
+      nameS = myArguments.param2;
       _fetchObjectsOfReclamationSystem(); // Вызываем метод для получения данных
       print('-----------------------------');
       print(refValue);
@@ -98,9 +101,9 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Сооружения и объекты системы $refValue',
+            'Сооружения и объекты:\n$nameS',
         maxLines: 2,
-        textAlign: TextAlign.start,),
+        textAlign: TextAlign.start, style: TextStyle(fontSize: 18),),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -124,8 +127,16 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
                           (p) => p['name']['#value'] == 'type',
                       orElse: () => {'Value': {'#value': 'N/A'}},
                     )['Value']['#value'];
-                    return CardMelioObjects(title: type, ein: ref, onTap:(){
-                      Navigator.of(context).pushNamed('/object_fun_nav', arguments: MyArguments(ref, refValue!, '', ''));
+                    String name = object.firstWhere(
+                          (p) => p['name']['#value'] == 'Name',
+                      orElse: () => {'Value': {'#value': 'N/A'}},
+                    )['Value']['#value'];
+                    String ein = object.firstWhere(
+                          (p) => p['name']['#value'] == 'EIN',
+                      orElse: () => {'Value': {'#value': 'N/A'}},
+                    )['Value']['#value'];
+                    return CardMelioObjects(title: name, ein: ein, onTap:(){
+                      Navigator.of(context).pushNamed('/object_fun_nav', arguments: MyArguments(ref, refValue!, nameS, name));
                     }, ref: ref);
         },
       ),

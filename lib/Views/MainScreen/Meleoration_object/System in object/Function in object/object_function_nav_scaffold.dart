@@ -22,6 +22,8 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
 
   String ref = '';
   String refValue = '';
+  String nameOb = '';
+  String nameS = '';
 
   @override
   void didChangeDependencies() {
@@ -36,6 +38,9 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
     }
     ref = args.param1;
     refValue = args.param2;
+    nameS = args.param3;
+    nameOb = args.param4;
+
     setState(() {
 
     });
@@ -45,14 +50,14 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Сооружение $ref, системы $refValue',
-      maxLines: 3, style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),),
+      appBar: AppBar(title: Text('Сооружение $nameOb, $nameS',
+      maxLines: 3, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),),
       body: ListView.builder(
           itemCount: arrayFunction.length,
           itemBuilder: (context, i){
             FunObject index = arrayFunction[i];
             return CardMainFun(icon: index.icon, title: index.title, description: index.description, onTap: (){
-              Navigator.of(context).pushNamed( index.pageURL, arguments: MyArguments(ref, refValue, '', ''));
+              Navigator.of(context).pushNamed( index.pageURL, arguments: MyArguments(ref, refValue, nameOb, ''));
             });
           }
       ),

@@ -5,8 +5,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
+import 'package:mobile_melioration/Views/MainScreen/Meleoration_object/System%20in%20object/Function%20in%20object/Applications%20for%20work/list_enter_job_application.dart';
 
 import '../../../../../../../Models/melioration_object_model.dart';
 import '../../../../../../../Models/my_arguments.dart';
@@ -22,7 +24,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
  DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications();
 
   MeliorationObjectModel? dat;
-  int? indexObj =1;
+  int? indexObj;
   bool isUpdate = false;
 
   String status = 'В проекте'; //Статус, заполненный заранее
@@ -36,6 +38,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
 
  String ref = '';
  String refValue = '';
+ Application? application;
+ String nameOb = '';
 
  @override
  void didChangeDependencies() {
@@ -48,11 +52,23 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
      log('You must provide String args');
      return;
    }
+   application = args.param3 as Application;
    ref = args.param1;
    refValue = args.param2;
-   setState(() {
+   nameOb = args.param4;
 
-   });
+   status = application!.status;
+   author = application!.owner;
+   meliorativeObject = nameOb;
+   description = application!.description;
+
+   if(description == null || description.isEmpty || description == ''){
+     isUpdate = false;
+   }else{
+     isUpdate = true;
+   }
+
+   setState(() {});
    super.didChangeDependencies();
  }
 
@@ -95,9 +111,9 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
    }
  }
 
- void _showSnackbar(BuildContext context) {
+ void _showSnackbar(BuildContext context, String massage) {
    final snackBar = SnackBar(
-     content: Text('Заявка уже отправлена'),
+     content: Text(massage),
      action: SnackBarAction(
        label: 'Закрыть',
        onPressed: () {
@@ -153,7 +169,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Новая заявка на работу'),
+        title: Text('Заявка на работу'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -161,8 +177,6 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('подсистема $ref системы $refValue'),
-              // Поле статуса
               TextField(
                 controller: TextEditingController(text: status,),
                 readOnly: true,
@@ -188,6 +202,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
               TextField(
                 controller: TextEditingController(text: meliorativeObject),
                 readOnly: true,
+                maxLines: 2,
                 decoration: InputDecoration(
                   labelText: 'Мелиоративный объект',
                   border: InputBorder.none,
@@ -298,17 +313,23 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                       ),
                     ),
                     onPressed: () {
-                      if(isUpdate == false){
+                      if(isUpdate == false && status == 'В проекте'){
                         status = 'В проекте';
-                        dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
-                        Navigator.of(context).pop('/list_enter_job_application');
-                      }else if (status == 'В проекте'){
-                        dbUtilsMelioObject?.updateTask(indexObj!,
-                            MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
-                        Navigator.of(context).pop('/list_enter_job_application');
+                        dbUtilsMelioObject?.addTask(
+                          MeliorationObjectModel('','','','',status, '', '', '', description, '', '', '', "2024-10-26T00:00:00-05:00", '', refValue, ref));
+                          Navigator.of(context).pop('/list_enter_job_application');
+                        print('$ref + $refValue МЫ СОЗДАЛИ НОВУЮ!!!! ');
+                      }else if (isUpdate == true && status == 'В проекте'){
+                        status == 'В проекте';
+                        dbUtilsMelioObject?.updateTask(getIndexByPrevUnit(ref) as int,
+                            MeliorationObjectModel('','','','',status, '', '', '', description, '', '', '', "2024-10-26T00:00:00-05:00", '', refValue, ref));
+                            Navigator.of(context).pop('/list_enter_job_application');
+                      }else if(status == 'На рассмотрении'){
+                        _showSnackbar(context, 'Заявка уже отправлена, её нельзя редактировать.');
                       }else{
-                        _showSnackbar(context);
+                        _showSnackbar(context, 'Ошибка статусной модели.');
                       }
+                      //todo: нужно обработать через case весь получаемый словарь статусов.
                     },
                     child: Text('Сохранить проект'), // Текст кнопки
                   ),
@@ -335,11 +356,15 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                     onPressed: () {
                       if(status == 'В проекте'){
                         status = 'На рассмотрении';
-                        dbUtilsMelioObject?.addTask(MeliorationObjectModel(meliorativeObject, '1', '1', author, status, ein, startDate.toString(), endDate.toString(), description, 'file.jpeg1', 'techHealth', 'techConditional','','','','',));
                         _sendApplicationForWork(description);
+                        deleteByPrevUnit(ref);
+                        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                        print('ОТПРАВКА ОБЪЕКТА НА СЕРВЕЕЕЕЕЕР!!!!!');
                         Navigator.of(context).pop('/list_enter_job_application');
+                      }else if(status == 'На рассмотрении'){
+                        _showSnackbar(context, 'Заявка уже отправлена.');
                       }else{
-                        _showSnackbar(context);
+                        _showSnackbar(context, 'Ошибка статусной модели.');
                       }
                     },
                     child: Text('Отправить'),
@@ -351,4 +376,27 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
       ),
     );
   }
+
+ Future<int?> getIndexByPrevUnit(String prevUnit) async {
+   final box = Hive.box<MeliorationObjectModel>('tasks');
+   List<MeliorationObjectModel> allObjects = box.values.toList();
+
+   // Находим индекс объекта с переданным prevUnit
+   for (int i = 0; i < allObjects.length; i++) {
+     if (allObjects[i].prevUnit == prevUnit) {
+       return i; // Возвращаем индекс, если найден
+     }
+   }
+   return null; // Возвращаем null, если объект не найден
+ }
+
+ // Метод для удаления задачи по prevUnit
+  Future<void> deleteByPrevUnit(String prevUnit) async {
+   int? index = await getIndexByPrevUnit(prevUnit);
+   if (index != null) {
+     await dbUtilsMelioObject?.deleteTask(index);
+   } else {
+     print('Объект с prevUnit $prevUnit не найден.');
+   }
+ }
 }

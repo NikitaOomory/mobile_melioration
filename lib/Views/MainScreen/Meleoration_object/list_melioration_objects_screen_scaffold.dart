@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Widgets/search_widget.dart';
 
+import '../../../Models/my_arguments.dart';
 import '../../../Widgets/card_melio_objects.dart';
 
 class ListMeliorationObjectsScreenScaffold extends StatefulWidget {
@@ -129,7 +130,7 @@ class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationOb
           ['#value'];
           return CardMelioObjects(title: name, ein: id,
               onTap: (){
-            Navigator.of(context).pushNamed('/list_object_in_melio', arguments: ref.toString());},
+            Navigator.of(context).pushNamed('/list_object_in_melio', arguments: MyArguments(ref, name, '',''));},
               ref: ref);
         },
       ),
