@@ -30,10 +30,10 @@ class JobApplicationCard extends StatelessWidget {
           children: [
             // Статус заявки
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               decoration: BoxDecoration(
                 color: getStatusColor(status),
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(status, style: TextStyle(
                 color: Colors.black,

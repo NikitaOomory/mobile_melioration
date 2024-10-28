@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../../../Models/my_arguments.dart';
 import '../../../Widgets/JobApplicationCard.dart';
 
 // class ListApplicationsScaffold extends StatefulWidget{
@@ -163,7 +164,8 @@ class _ListApplicationsScaffoldState extends State<ListApplicationsScaffold> {
                   break;
               }
             }
-            return JobApplicationCard(status: status, title: 'Заявка $number', requestNumber: number, requestDate: startDate, author: owner, onTap: (){});
+            return JobApplicationCard(status: status, title: 'Заявка $number', requestNumber: number, requestDate: startDate, author: owner, onTap: (){
+            });
           },
         ),
       ),

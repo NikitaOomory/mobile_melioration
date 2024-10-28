@@ -83,8 +83,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
    final Map<String, dynamic> requestBody = {
      "ReclamationSystem": refValue,
      "HydraulicStructure": ref,
-     "startDate": "2024-10-26T00:00:00-05:00",
-     "startJobDate": "2024-10-26T00:00:00-05:00",
+     "startDate": "2024-10-28T00:00:00-05:00",
+     "startJobDate": "2024-10-28T00:00:00-05:00",
      "endJobDate": "2024-10-30T00:00:00-05:00",
      "description": description,
    };
@@ -360,6 +360,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm>{
                         deleteByPrevUnit(ref);
                         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                         print('ОТПРАВКА ОБЪЕКТА НА СЕРВЕЕЕЕЕЕР!!!!!');
+
                         Navigator.of(context).pop('/list_enter_job_application');
                       }else if(status == 'На рассмотрении'){
                         _showSnackbar(context, 'Заявка уже отправлена.');
