@@ -26,14 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-      // Выводим ответ в консоль
       print('Ответ от сервера: ${response.data}');
 
       if (response.statusCode == 200) {
-        // Успешная авторизация
         Navigator.of(context).pushReplacementNamed('/main_screen');
       } else {
-        // Обработка неуспешной авторизации
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка авторизации: ${response.statusCode}')),
         );

@@ -60,7 +60,7 @@ class _TechCondFormState extends State<TechCondForm> {
     final Map<String, dynamic> requestBody = {
       "ref": ref,
       "TechnicalCondition": tech,
-      "ActualWear": 56,
+      "ActualWear": 78,
     };
 
     try {

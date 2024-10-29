@@ -3,26 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../../Models/my_arguments.dart';
 import '../../../Widgets/JobApplicationCard.dart';
-
-// class ListApplicationsScaffold extends StatefulWidget{
-//   const ListApplicationsScaffold({super.key});
-//
-//   @override
-//   State<StatefulWidget> createState() => _ListApplicationsScaffold();
-// }
-//
-// class _ListApplicationsScaffold extends State<ListApplicationsScaffold>{
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Заявки на работу'),),
-//       body: const Center(child: CircularProgressIndicator(),),
-//     );
-//   }
-// }
 
 class ListApplicationsScaffold extends StatefulWidget {
   @override
