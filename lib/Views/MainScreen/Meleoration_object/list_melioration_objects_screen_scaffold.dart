@@ -11,10 +11,12 @@ class ListMeliorationObjectsScreenScaffold extends StatefulWidget {
   const ListMeliorationObjectsScreenScaffold({super.key});
 
   @override
-  _ListMeliorationObjectsScreenScaffoldState createState() => _ListMeliorationObjectsScreenScaffoldState();
+  _ListMeliorationObjectsScreenScaffoldState createState() =>
+      _ListMeliorationObjectsScreenScaffoldState();
 }
 
-class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationObjectsScreenScaffold> {
+class _ListMeliorationObjectsScreenScaffoldState
+    extends State<ListMeliorationObjectsScreenScaffold> {
   final Dio _dio = Dio();
   List<dynamic> _reclamations = [];
   bool _isLoading = true;
@@ -26,9 +28,10 @@ class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationOb
   }
 
   Future<void> _fetchReclamations() async {
-    final String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getReclamationSystem';
-    String username = 'tropin'; // Замените на ваши учетные данные
-    String password = '1234'; // Замените на ваши учетные данные
+    final String url =
+        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getReclamationSystem';
+    String username = 'tropin';
+    String password = '1234';
 
     try {
       final response = await _dio.get(
@@ -36,18 +39,18 @@ class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationOb
         options: Options(
           headers: {
             'Authorization':
-            'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+                'Basic ${base64Encode(utf8.encode('$username:$password'))}',
           },
         ),
       );
 
       if (response.statusCode == 200) {
-        print('Response data: ${response.data}'); // Отладочное сообщение
+        print('Response data: ${response.data}');
         Map<String, dynamic> data = response.data;
 
         // Проверка наличия данных
         var dataObject = data['#value']?.firstWhere(
-                (item) => item['name']['#value'] == 'data',
+            (item) => item['name']['#value'] == 'data',
             orElse: () => null);
 
         if (dataObject != null && dataObject['Value']['#value'] != null) {
@@ -85,59 +88,73 @@ class _ListMeliorationObjectsScreenScaffoldState extends State<ListMeliorationOb
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _reclamations.isEmpty
-          ? Center(child: Text('Нет данных для отображения'))
-          : Padding(
-         padding: const EdgeInsets.all(16.0),
-         child: Column(
-           children: [
-            SearchWidget(),
-             Expanded(
-               child: ListView.builder(
-        itemCount: _reclamations.length,
-        itemBuilder: (context, index) {
-          final reclamation = _reclamations[index];
-          final properties = reclamation['#value'];
+              ? Center(child: Text('Нет доступных систем'))
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(children: [
+                    SearchWidget(),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _reclamations.length,
+                        itemBuilder: (context, index) {
+                          final reclamation = _reclamations[index];
+                          final properties = reclamation['#value'];
 
-          // Извлечение значений из структуры
-          String ref = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'Ref',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value'];
-          String id = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'Id',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value'];
-          String name = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'Name',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value'];
-          String type = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'Type',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value'];
-          String location = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'Location',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value'];
-          String actualWear = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'ActualWear',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value']
-              ?.toString() ?? 'N/A';
-          String technicalCondition = properties.firstWhere(
-                  (p) => p['name']['#value'] == 'TechnicalCondition',
-              orElse: () => {'Value': {'#value': 'N/A'}})['Value']
-          ['#value'];
-          return CardMelioObjects(title: name, ein: id,
-              onTap: (){
-            Navigator.of(context).pushNamed('/list_object_in_melio', arguments: MyArguments(ref, name, '',''));},
-              ref: ref);
-        },
-      ),
-    ),
-  ]),
-    ),
+                          // Извлечение значений из структуры
+                          String refSystem = properties.firstWhere(
+                              (p) => p['name']['#value'] == 'Ref',
+                              orElse: () => {
+                                    'Value': {'#value': 'N/A'}
+                                  })['Value']['#value'];
+                          String id = properties.firstWhere(
+                              (p) => p['name']['#value'] == 'Id',
+                              orElse: () => {
+                                    'Value': {'#value': 'N/A'}
+                                  })['Value']['#value'];
+                          String nameSystem = properties.firstWhere(
+                              (p) => p['name']['#value'] == 'Name',
+                              orElse: () => {
+                                    'Value': {'#value': 'N/A'}
+                                  })['Value']['#value'];
+                          String type = properties.firstWhere(
+                              (p) => p['name']['#value'] == 'Type',
+                              orElse: () => {
+                                    'Value': {'#value': 'N/A'}
+                                  })['Value']['#value'];
+                          String location = properties.firstWhere(
+                              (p) => p['name']['#value'] == 'Location',
+                              orElse: () => {
+                                    'Value': {'#value': 'N/A'}
+                                  })['Value']['#value'];
+                          String actualWear = properties
+                                  .firstWhere(
+                                      (p) =>
+                                          p['name']['#value'] == 'ActualWear',
+                                      orElse: () => {
+                                            'Value': {'#value': 'N/A'}
+                                          })['Value']['#value']
+                                  ?.toString() ??
+                              'N/A';
+                          String technicalCondition = properties.firstWhere(
+                              (p) =>
+                                  p['name']['#value'] == 'TechnicalCondition',
+                              orElse: () => {
+                                    'Value': {'#value': 'N/A'}
+                                  })['Value']['#value'];
+                          return CardMelioObjects(
+                              title: nameSystem,
+                              ein: id,
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                    '/list_object_in_melio',
+                                    arguments: MyArguments(refSystem, nameSystem, '', ''));
+                              },
+                              ref: refSystem);
+                        },
+                      ),
+                    ),
+                  ]),
+                ),
     );
   }
 }
-

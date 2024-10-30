@@ -27,6 +27,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
   MeliorationObjectModel? dat;
   int? indexObj;
   bool isUpdate = false;
+  List<String> downloadFiles = [];
 
   String status = 'В проекте'; //Статус, заполненный заранее
   String author = 'Иван Иванов'; //Автор, заполненный заранее
@@ -79,8 +80,11 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
   final Dio _dio = Dio();
 
   //todo: встроить в метод для отправки;
-  Future<void> uploadFiles(String url, String ref, List<File> files, String username, String password) async {
+  Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
+    String username = 'tropin'; // Замените на ваши учетные данные
+    String password = '1234'; // Замените на ваши учетные данные
+    String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
     // Установите базовую аутентификацию
     dio.options.headers["Authorization"] = "Basic " + base64Encode(utf8.encode('$username:$password'));
@@ -89,18 +93,25 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
       try {
         // Создаем FormData для отправки
         FormData formData = FormData.fromMap({
-          'ref': ref,
-          'file': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
+          'ref': 'd7b0af7c-96be-11ef-9db5-005056907678', // Используем переданный ref
+          'file': await MultipartFile.fromFile(
+            file.path,
+            filename: file.path.split('/').last,
+             // Указываем Content-Type
+
+          ),
         });
 
         // Отправляем POST-запрос
         final response = await dio.post(url, data: formData);
+        print(formData.fields); // Выводит поля формы
+
 
         // Обрабатываем ответ
         if (response.statusCode == 200) {
           print('Файл ${file.path.split('/').last} успешно загружен: ${response.data}');
         } else {
-          print('Ошибка при загрузке файла ${file.path.split('/').last}: ${response.statusCode}');
+          print('Ошибка при загрузке файла ${file.path.split('/').last}: ОТВЕТ 1С ${response.statusCode}');
         }
       } catch (e) {
         print('Произошла ошибка при загрузке файла ${file.path}: $e');
@@ -417,7 +428,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                     title: Row(
                       children: [
                         Icon(Icons.file_open_rounded, color: Color.fromARGB(255, 0, 78, 167),),
-                        Text(_attachedFiles[index].path.split('/').last, style: TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
+                        Text(_attachedFiles[index].path.split('/').last,
+                          style: TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
                       ],
                     ),
                     trailing: IconButton(
@@ -461,7 +473,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                           '',
                           '',
                           description,
-                          '',
+                          'downloadFiles',
                           '',
                           '',
                           "2024-10-26T00:00:00-05:00",
@@ -484,7 +496,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                               '',
                               '',
                               description,
-                              '',
+                              'downloadFiles',
                               '',
                               '',
                               "2024-10-26T00:00:00-05:00",
@@ -505,6 +517,31 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
               ),
 
               SizedBox(height: 4),
+
+              SizedBox(
+                width: double.infinity,
+                // Задает ширину кнопки на всю ширину экрана
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color.fromARGB(255, 0, 78, 167),
+                    // Цвет текста (синий)
+                    side: BorderSide(
+                      color: Color.fromARGB(255, 0, 78, 167),
+                      // Синяя рамка вокруг кнопки
+                      width: 2.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(5), // Убираем закругление
+                    ),
+                  ),
+                  onPressed: () {
+                    uploadFiles(ref, _attachedFiles);
+                  },
+                  child: Text('Отправить файлы'),
+                ),
+              ),
 
               SizedBox(
                 width: double.infinity,

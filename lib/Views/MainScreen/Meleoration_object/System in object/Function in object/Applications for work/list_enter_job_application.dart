@@ -105,7 +105,6 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
   }
 
 
-
   Future<void> _fetchApplications() async {
     final String url =
         'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getApplicationsForWork';
