@@ -20,10 +20,10 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
     FunObject(Icons.contact_page_rounded, 'Актуализация тех. состояния', 'Внесение изменений о техническом состоянии', '/tech_cond_form'),
   ];
 
-  String ref = '';
-  String refValue = '';
-  String nameOb = '';
-  String nameS = '';
+  String refObject = '';
+  String refSystem = '';
+  String nameObject = '';
+  String nameSystem = '';
 
   @override
   void didChangeDependencies() {
@@ -36,10 +36,10 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
       log('You must provide String args');
       return;
     }
-    ref = args.param1;
-    refValue = args.param2;
-    nameS = args.param3;
-    nameOb = args.param4;
+    refObject = args.param1;
+    refSystem = args.param2;
+    nameSystem = args.param3;
+    nameObject = args.param4;
 
     setState(() {
 
@@ -50,14 +50,14 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Сооружение $nameOb, $nameS',
+      appBar: AppBar(title: Text('Сооружение $nameObject, $nameSystem',
       maxLines: 3, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),),
       body: ListView.builder(
           itemCount: arrayFunction.length,
           itemBuilder: (context, i){
             FunObject index = arrayFunction[i];
             return CardMainFun(icon: index.icon, title: index.title, description: index.description, onTap: (){
-              Navigator.of(context).pushNamed( index.pageURL, arguments: MyArguments(ref, refValue, nameOb, ''));
+              Navigator.of(context).pushNamed( index.pageURL, arguments: MyArguments(refObject, refSystem, nameObject, '1'));
             });
           }
       ),

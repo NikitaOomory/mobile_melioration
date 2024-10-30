@@ -15,9 +15,12 @@ class TechCondForm extends StatefulWidget {
 class _TechCondFormState extends State<TechCondForm> {
   final TextEditingController _wearController = TextEditingController();
   String? _selectedCondition;
-  String ref = '';
-  String refValue = '';
-  String nameOb='';
+  String refObject = '';
+  String refSystem = '';
+  String nameOb = '';
+  String tracker = ''; //если приходит 1 то нужно отобразить название системы в двух местах
+  String ein = '30Ф-ОРО-0001-ООС-001';
+
 
   @override
   void didChangeDependencies() {
@@ -30,8 +33,12 @@ class _TechCondFormState extends State<TechCondForm> {
       log('You must provide String args');
       return;
     }
-    ref = args.param1;
-    refValue = args.param2;
+    refObject = args.param1;
+    if(args.param4! == '1'){
+      refSystem = args.param3;
+    }else{
+      refSystem = args.param2;
+    }
     nameOb = args.param3;
     setState(() {
 
@@ -58,7 +65,7 @@ class _TechCondFormState extends State<TechCondForm> {
 
     // Тело запроса
     final Map<String, dynamic> requestBody = {
-      "ref": ref,
+      "ref": refObject,
       "TechnicalCondition": tech,
       "ActualWear": 78,
     };
@@ -96,8 +103,6 @@ class _TechCondFormState extends State<TechCondForm> {
         },
       ),
     );
-
-    // Показать SnackBar
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -116,7 +121,7 @@ class _TechCondFormState extends State<TechCondForm> {
               children: [
 
                 TextField(
-                  controller: TextEditingController(text: refValue,),
+                  controller: TextEditingController(text: refSystem,),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Мелиоративная система',
@@ -126,7 +131,7 @@ class _TechCondFormState extends State<TechCondForm> {
                 SizedBox(height: 16),
 
                 TextField(
-                  controller: TextEditingController(text: 'система'),
+                  controller: TextEditingController(text: 'Cистема'),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Вид объекта',
@@ -159,7 +164,7 @@ class _TechCondFormState extends State<TechCondForm> {
 
                 // Поле ЕИН объекта
                 TextField(
-                  controller: TextEditingController(text: refValue),
+                  controller: TextEditingController(text: ein),
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'ЕИН объекта',

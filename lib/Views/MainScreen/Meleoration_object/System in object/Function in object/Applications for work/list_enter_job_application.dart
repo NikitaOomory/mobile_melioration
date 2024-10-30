@@ -50,9 +50,9 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
   String _error = '';
   String ref2 = '';
   String refValue2 = '';
-  String newRef = '';
-  String newRefValue ='';
-  String nameObj ='';
+  String refObject = '';
+  String refSystem ='';
+  String nameObject ='';
 
     @override
   void didChangeDependencies() {
@@ -65,9 +65,9 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
       log('You must provide String args');
       return;
     }
-    newRef = args.param1;
-    newRefValue = args.param2;
-    nameObj = args.param3;
+    refObject = args.param1;
+    refSystem = args.param2;
+    nameObject = args.param3;
     setState(() {
 
     });
@@ -200,7 +200,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
 
           _addApplicationsFromMeliorationObjects();
 
-          String filterValue = newRef; // Установите значение для фильтрации
+          String filterValue = refObject; // Установите значение для фильтрации
           _filteredApplications = _applications.where((app) =>
           app.hydraulicStructure == filterValue).toList();
 
@@ -233,7 +233,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Заявки на работы $nameObj', maxLines: 3, style: TextStyle(fontSize: 16),),
+        title: Text('Заявки на работы $nameObject', maxLines: 3, style: TextStyle(fontSize: 16),),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -253,25 +253,25 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
                   requestDate: application.startDate,
                   author: application.owner,
                   onTap: (){
-                    Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(ref2, refValue2, application, nameObj));
+                    Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(refObject, refSystem, application, nameObject));
                   },
             );
         },
       ),
       ),
         floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(newRef, newRefValue,
+        Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(refObject, refSystem,
             Application(
             ref: '',
             owner: 'Тропин Александр Флександрович',
             reclamationSystem: '',
-            hydraulicStructure: newRef,
+            hydraulicStructure: refObject,
             startDate: '',
             startJobDate: 'startJobDate',
             endJobDate: 'endJobDate',
             description: '',
             number: 'number',
-            status: 'В проекте'), nameObj));},
+            status: 'В проекте'), nameObject));},
           child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Color.fromARGB(255, 0, 78, 167),
       ),

@@ -110,11 +110,9 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
                     CardMainFun(
                         icon: Icons.contact_page_rounded,
                         title: 'Актуализация тех. состояния',
-                        description:
-                            'Внесение изменений о техническом состоянии',
+                        description: 'Внесение изменений о техническом состоянии',
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed('/tech_cond_form', arguments: '');
+                          Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
                         }),
                     const SizedBox(height: 40),
                     Text(
@@ -126,21 +124,24 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(children: [
-                    Card(
-                      elevation: 5,
-                      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8  ),
-                      child: Container(
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
-                        padding: const EdgeInsets.all(20),
-                        child:Column(children: [
-                          Row(children: [Icon(Icons.contact_page_rounded, size: 30, color: const Color.fromARGB(255, 0, 78, 167),),],),
-                          const SizedBox(height: 4),
-                          Row(children: [Text('Актуализация тех. состояния', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
-                          const SizedBox(height: 4),
-                          Row(children: [Text('Внесение изменений о техническом состоянии', style: const TextStyle(color: Colors.grey),),],),
-                        ],),
-                      ),
-                    ),
+                      GestureDetector(
+                      onTap: ()=>Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1')),
+                      child: Card(
+                        elevation: 5,
+                        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8  ),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
+                          padding: const EdgeInsets.all(20),
+                          child:Column(children: [
+                            Row(children: [Icon(Icons.contact_page_rounded, size: 30, color: const Color.fromARGB(255, 0, 78, 167),),],),
+                            const SizedBox(height: 4),
+                            Row(children: [Text('Актуализация тех. состояния', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
+                            const SizedBox(height: 4),
+                            Row(children: [Text('Внесение изменений о техническом состоянии', style: const TextStyle(color: Colors.grey),),],),
+                          ],),
+                        ),
+
+                      ),),
                     const SizedBox(height: 20),
                     SearchWidget(),
                     const SizedBox(height: 16),
@@ -149,7 +150,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
                         itemCount: _objects.length,
                         itemBuilder: (context, index) {
                           final object = _objects[index]['#value'];
-                          String ref = object.firstWhere(
+                          String refObject = object.firstWhere(
                             (p) => p['name']['#value'] == 'ref',
                             orElse: () => {
                               'Value': {'#value': 'N/A'}
@@ -161,7 +162,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
                               'Value': {'#value': 'N/A'}
                             },
                           )['Value']['#value'];
-                          String name = object.firstWhere(
+                          String nameObject = object.firstWhere(
                             (p) => p['name']['#value'] == 'Name',
                             orElse: () => {
                               'Value': {'#value': 'N/A'}
@@ -174,15 +175,15 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
                             },
                           )['Value']['#value'];
                           return CardMelioObjects(
-                              title: name,
+                              title: nameObject,
                               ein: ein,
                               onTap: () {
                                 Navigator.of(context).pushNamed(
                                     '/object_fun_nav',
                                     arguments: MyArguments(
-                                        ref, refSystem!, nameSystem, name));
+                                        refObject, refSystem!, nameSystem, nameObject));
                               },
-                              ref: ref);
+                              ref: refObject);
                         },
                       ),
                     ),
