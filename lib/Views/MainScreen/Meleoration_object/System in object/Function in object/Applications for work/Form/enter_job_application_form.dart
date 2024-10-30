@@ -93,6 +93,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
     };
 
     try {
+      await uploadFiles(refObject, _attachedFiles);
       final response = await _dio.post(
         url,
         data: jsonEncode(requestBody), // Отправка тела запроса
@@ -106,23 +107,28 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
       );
 
       if (response.statusCode == 200) {
-        print('Response data: ${response.data}'); // Выводим ответ в консоль
+        print('--------------------------------------------------------');
+        print('Заявка отправлена');
+        print('--------------------------------------------------------');
+        print('Response data: ${response.data}');
       } else {
-        print('Ошибка: ${response.statusCode}'); // Выводим статус ошибки
+        print('--------------------------------------------------------');
+        print('Ошибка отправки заявки: ${response.statusCode}');
+        print('--------------------------------------------------------');
       }
     } catch (e) {
-      print('Ошибка: $e'); // Обработка ошибок
+      print('--------------------------------------------------------');
+      print('Ошибка отправки заявки: $e');
+      print('--------------------------------------------------------');
     }
   }
 
-  //todo: встроить в метод для отправки;
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
-    String username = 'tropin'; // Замените на ваши учетные данные
-    String password = '1234'; // Замените на ваши учетные данные
+    String username = 'tropin';
+    String password = '1234';
     String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
-    // Установите базовую аутентификацию
     dio.options.headers["Authorization"] = "Basic " + base64Encode(utf8.encode('$username:$password'));
 
     for (File file in files) {
@@ -145,12 +151,19 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
 
         // Обрабатываем ответ
         if (response.statusCode == 200) {
+          print('--------------------------------------------------------');
+          print('ФАЙЛЫ ОТПРАВИЛИСЬ');
+          print('--------------------------------------------------------');
           print('Файл ${file.path.split('/').last} успешно загружен: ${response.data}');
         } else {
+          print('--------------------------------------------------------');
           print('Ошибка при загрузке файла ${file.path.split('/').last}: ОТВЕТ 1С ${response.statusCode}');
+          print('--------------------------------------------------------');
         }
       } catch (e) {
+        print('--------------------------------------------------------');
         print('Произошла ошибка при загрузке файла ${file.path}: $e');
+        print('--------------------------------------------------------');
       }
     }
   }
@@ -521,31 +534,6 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadius.circular(5), // Убираем закругление
-                    ),
-                  ),
-                  onPressed: () {
-                    uploadFiles(refObject, _attachedFiles);
-                  },
-                  child: const Text('Отправить файлы'),
-                ),
-              ),
-
-              SizedBox(
-                width: double.infinity,
-                // Задает ширину кнопки на всю ширину экрана
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromARGB(255, 0, 78, 167),
-                    // Цвет текста (синий)
-                    side: const BorderSide(
-                      color: Color.fromARGB(255, 0, 78, 167),
-                      // Синяя рамка вокруг кнопки
-                      width: 2.0,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
                           BorderRadius.circular(5), // Убираем закругление
                     ),
                   ),
@@ -554,8 +542,6 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                       status = 'На рассмотрении';
                       _sendApplicationForWork(description);
                       deleteByPrevUnit(refObject);
-                      print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                      print('ОТПРАВКА ОБЪЕКТА НА СЕРВЕЕЕЕЕЕР!!!!!');
 
                       Navigator.of(context).pop('/list_enter_job_application');
                     } else if (status == 'На рассмотрении') {
