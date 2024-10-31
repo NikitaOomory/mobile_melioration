@@ -8,23 +8,86 @@ import 'package:mobile_melioration/Widgets/search_widget.dart';
 import '../../../../Widgets/card_main_fun.dart';
 import '../../../../Widgets/card_melio_objects.dart';
 
+class MelObjects {
+  final String refSystem;
+  final String id;
+  final String name;
+  final String type;
+  final String location;
+  final String actualWear;
+  final String technicalCondition;
+
+  MelObjects({
+    required this.refSystem,
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.location,
+    required this.actualWear,
+    required this.technicalCondition,
+  });
+
+  factory MelObjects.fromJson(Map<String, dynamic> json) {
+    final properties = json['#value'];
+    return MelObjects(
+      refSystem: properties.firstWhere((p) => p['name']['#value'] == 'Ref',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      id: properties.firstWhere((p) => p['name']['#value'] == 'Id',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      name: properties.firstWhere((p) => p['name']['#value'] == 'Name',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      type: properties.firstWhere((p) => p['name']['#value'] == 'Type',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      location: properties.firstWhere((p) => p['name']['#value'] == 'Location',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      actualWear: properties
+              .firstWhere((p) => p['name']['#value'] == 'ActualWear',
+                  orElse: () => {
+                        'Value': {'#value': 'N/A'}
+                      })['Value']['#value']
+              ?.toString() ??
+          'N/A',
+      technicalCondition: properties.firstWhere(
+          (p) => p['name']['#value'] == 'TechnicalCondition',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+    );
+  }
+}
+
 class ListObjectsInMelioScreenScaffold extends StatefulWidget {
   @override
   _ListObjectsInMelioScreenScaffoldState createState() =>
       _ListObjectsInMelioScreenScaffoldState();
 }
 
-class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScreenScaffold> {
-  final Dio _dio = Dio();
-  List<dynamic> _objects = [];
-  bool _isLoading = true;
+class _ListObjectsInMelioScreenScaffoldState
+    extends State<ListObjectsInMelioScreenScaffold> {
+  List<MelObjects> _objects = []; // Список объектов
+  List<MelObjects> _filteredObjects = []; // Отфильтрованный список
+  bool _isLoading = true; // Статус загрузки
+  String _searchQuery = ''; // Поисковый запрос
+  final Dio _dio = Dio(); // Инициализация Dio
+
   String? refSystem;
   String nameSystem = '';
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    MyArguments? myArguments = ModalRoute.of(context)?.settings.arguments as MyArguments?;
+    MyArguments? myArguments =
+        ModalRoute.of(context)?.settings.arguments as MyArguments?;
 
     if (myArguments != null) {
       refSystem = myArguments.param1;
@@ -37,13 +100,19 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchObjectsOfReclamationSystem(); // Загружаем данные при инициализации
+  }
+
   Future<void> _fetchObjectsOfReclamationSystem() async {
-    final String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getObjectsOfReclamationSystem';
+    final String url =
+        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getObjectsOfReclamationSystem';
     String username = 'tropin';
     String password = '1234';
-
     final Map<String, dynamic> requestBody = {
-      "ref": refSystem,
+      "ref": refSystem, // Замените на актуальное значение
     };
 
     try {
@@ -52,7 +121,8 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
         data: jsonEncode(requestBody),
         options: Options(
           headers: {
-            'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+            'Authorization':
+                'Basic ${base64Encode(utf8.encode('$username:$password'))}',
             'Content-Type': 'application/json',
           },
         ),
@@ -60,7 +130,6 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
 
       if (response.statusCode == 200) {
         print('Response data: ${response.data}');
-
         var dataObject = response.data['#value']?.firstWhere(
           (item) => item['name']['#value'] == 'data',
           orElse: () => null,
@@ -68,10 +137,28 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
 
         if (dataObject != null) {
           var valueArray = dataObject['Value']['#value'];
-          setState(() {
-            _objects = valueArray; // Сохраняем данные для отображения
-            _isLoading = false; // Останавливаем индикатор загрузки
-          });
+
+          // Проверяем, является ли valueArray списком или пустым массивом
+          if (valueArray is List) {
+            setState(() {
+              _objects =
+                  valueArray.map((item) => MelObjects.fromJson(item)).toList();
+              _filteredObjects = _objects; // Изначально показываем все
+              _isLoading = false; // Останавливаем индикатор загрузки
+            });
+          } else if (valueArray is Map && valueArray.isEmpty) {
+            // Если valueArray - пустой массив
+            setState(() {
+              _objects = []; // Устанавливаем пустой список
+              _filteredObjects = _objects; // Изначально показываем все
+              _isLoading = false; // Останавливаем индикатор загрузки
+            });
+          } else {
+            print('valueArray не является списком');
+            setState(() {
+              _isLoading = false; // Останавливаем индикатор загрузки
+            });
+          }
         } else {
           setState(() {
             _isLoading = false; // Останавливаем индикатор загрузки
@@ -91,104 +178,136 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
     }
   }
 
+  void _filterObjects(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredObjects = _objects.where((object) {
+        return object.name.toLowerCase().contains(query.toLowerCase()) ||
+            object.id.toLowerCase().contains(query.toLowerCase()) ||
+            object.type.toLowerCase().contains(query.toLowerCase()) ||
+            object.location.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Сооружения и объекты:\n$nameSystem',
-          maxLines: 2,
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18),
-        ),
+        title: Text('Объекты рекламационной системы'),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : _objects.isEmpty
-              ? Column(
-                  children: [
-                    CardMainFun(
-                        icon: Icons.contact_page_rounded,
-                        title: 'Актуализация тех. состояния',
-                        description: 'Внесение изменений о техническом состоянии',
-                        onTap: () {
-                          Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
-                        }),
-                    const SizedBox(height: 40),
-                    Text(
-                      'В данной системе нет объектов',
-                      style: TextStyle(fontSize: 18),
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: _filterObjects, // Здесь вызываем метод
+                    decoration: InputDecoration(
+                      hintText: 'Поиск...',
+                      prefixIcon:
+                          Icon(Icons.search), // Добавление иконки поиска
+                      border: OutlineInputBorder(),
                     ),
-                  ],
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(children: [
-                      GestureDetector(
-                      onTap: ()=>Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1')),
-                      child: Card(
-                        elevation: 5,
-                        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8  ),
-                        child: Container(
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
-                          padding: const EdgeInsets.all(20),
-                          child:Column(children: [
-                            Row(children: [Icon(Icons.contact_page_rounded, size: 30, color: const Color.fromARGB(255, 0, 78, 167),),],),
-                            const SizedBox(height: 4),
-                            Row(children: [Text('Актуализация тех. состояния', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
-                            const SizedBox(height: 4),
-                            Row(children: [Text('Внесение изменений о техническом состоянии', style: const TextStyle(color: Colors.grey),),],),
-                          ],),
-                        ),
-
-                      ),),
-                    const SizedBox(height: 20),
-                    SearchWidget(),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _objects.length,
-                        itemBuilder: (context, index) {
-                          final object = _objects[index]['#value'];
-                          String refObject = object.firstWhere(
-                            (p) => p['name']['#value'] == 'ref',
-                            orElse: () => {
-                              'Value': {'#value': 'N/A'}
-                            },
-                          )['Value']['#value'];
-                          String type = object.firstWhere(
-                            (p) => p['name']['#value'] == 'type',
-                            orElse: () => {
-                              'Value': {'#value': 'N/A'}
-                            },
-                          )['Value']['#value'];
-                          String nameObject = object.firstWhere(
-                            (p) => p['name']['#value'] == 'Name',
-                            orElse: () => {
-                              'Value': {'#value': 'N/A'}
-                            },
-                          )['Value']['#value'];
-                          String ein = object.firstWhere(
-                            (p) => p['name']['#value'] == 'EIN',
-                            orElse: () => {
-                              'Value': {'#value': 'N/A'}
-                            },
-                          )['Value']['#value'];
-                          return CardMelioObjects(
-                              title: nameObject,
-                              ein: ein,
+                  ),
+                ),
+                Expanded(
+                  child: _filteredObjects.isEmpty
+                      ? Column(
+                          children: [
+                            CardMainFun(
+                              icon: Icons.contact_page_rounded,
+                              title: 'Актуализация тех. состояния',
+                              description:
+                                  'Внесение изменений о техническом состоянии',
                               onTap: () {
                                 Navigator.of(context).pushNamed(
+                                  '/tech_cond_form',
+                                  arguments: MyArguments(
+                                      refSystem!, refSystem!, nameSystem, '1'),
+                                );
+                              },
+                            ),
+                            Center(child: Text('Нет доступных объектов'))
+                          ],
+                        )
+                      : ListView.builder(
+                          itemCount: _filteredObjects.length + 1,
+                          // Увеличиваем на 1 для карточки
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              // Первая карточка - CardMainFun
+                              return CardMainFun(
+                                icon: Icons.contact_page_rounded,
+                                title: 'Актуализация тех. состояния',
+                                description:
+                                    'Внесение изменений о техническом состоянии',
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    '/tech_cond_form',
+                                    arguments: MyArguments(refSystem!,
+                                        refSystem!, nameSystem, '1'),
+                                  );
+                                },
+                              );
+                            } else {
+                              final MelObjects object = _filteredObjects[
+                                  index - 1]; // Смещаем индекс на 1
+                              String refObject = object
+                                  .refSystem; // или другое поле, если нужно
+                              String ein =
+                                  object.id; // Предположим, это идентификатор
+                              String nameObject =
+                                  object.name; // Название объекта
+                              String nameSystem = object
+                                  .type; // Или любое другое поле, если нужно
+                              return CardMelioObjects(
+                                title: nameObject,
+                                ein: ein,
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
                                     '/object_fun_nav',
                                     arguments: MyArguments(
-                                        refObject, refSystem!, nameSystem, nameObject));
-                              },
-                              ref: refObject);
-                        },
-                      ),
-                    ),
-                  ]),
+                                        refObject,
+                                        refSystem!,
+                                        nameSystem,
+                                        nameObject), // Замените на актуальное значение
+                                  );
+                                },
+                                ref: refObject,
+                              );
+                            }
+                          },
+                        ),
                 ),
+              ],
+            ),
     );
   }
 }
+
+// final Dio _dio = Dio();
+// List<dynamic> _objects = [];
+// bool _isLoading = true;
+// String? refSystem;
+// String nameSystem = '';
+//
+// @override
+// void didChangeDependencies() {
+//   super.didChangeDependencies();
+//   MyArguments? myArguments = ModalRoute.of(context)?.settings.arguments as MyArguments?;
+//
+//   if (myArguments != null) {
+//     refSystem = myArguments.param1;
+//     nameSystem = myArguments.param2;
+//     _fetchObjectsOfReclamationSystem(); // Вызываем метод для получения данных
+//   } else {
+//     setState(() {
+//       _isLoading = false;
+//     });
+//   }
+// }
+
+// arguments: MyArguments(
+// refObject, refSystem!, nameSystem, nameObject));

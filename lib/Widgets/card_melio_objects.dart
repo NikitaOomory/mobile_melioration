@@ -8,7 +8,6 @@ class CardMelioObjects extends StatelessWidget {
   final VoidCallback onTap;
 
 
-
   CardMelioObjects({ required this.title, required this.ein, required this.onTap, required this.ref});
 
   @override Widget build(BuildContext context) {

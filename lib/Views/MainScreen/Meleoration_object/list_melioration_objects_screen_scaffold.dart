@@ -17,14 +17,16 @@ class ListMeliorationObjectsScreenScaffold extends StatefulWidget {
 
 class _ListMeliorationObjectsScreenScaffoldState
     extends State<ListMeliorationObjectsScreenScaffold> {
-  final Dio _dio = Dio();
-  List<dynamic> _reclamations = [];
-  bool _isLoading = true;
+  List<MelObjects> _reclamations = []; // Список объектов
+  List<MelObjects> _filteredReclamations = []; // Отфильтрованный список
+  bool _isLoading = true; // Статус загрузки
+  String _searchQuery = ''; // Поисковый запрос
+  final Dio _dio = Dio(); // Инициализация Dio
 
   @override
   void initState() {
     super.initState();
-    _fetchReclamations();
+    _fetchReclamations(); // Загружаем данные при инициализации
   }
 
   Future<void> _fetchReclamations() async {
@@ -50,15 +52,29 @@ class _ListMeliorationObjectsScreenScaffoldState
 
         // Проверка наличия данных
         var dataObject = data['#value']?.firstWhere(
-            (item) => item['name']['#value'] == 'data',
-            orElse: () => null);
+          (item) => item['name']['#value'] == 'data',
+          orElse: () => null,
+        );
 
         if (dataObject != null && dataObject['Value']['#value'] != null) {
           var valueArray = dataObject['Value']['#value'];
-          setState(() {
-            _reclamations = valueArray; // Сохраняем данные для отображения
-            _isLoading = false; // Останавливаем индикатор загрузки
-          });
+
+          // Убедитесь, что valueArray является списком
+          if (valueArray is List) {
+            setState(() {
+              // Преобразование данных в список MelObjects
+              _reclamations =
+                  valueArray.map((item) => MelObjects.fromJson(item)).toList();
+              _filteredReclamations =
+                  _reclamations; // Изначально показываем все
+              _isLoading = false; // Останавливаем индикатор загрузки
+            });
+          } else {
+            print('valueArray не является списком');
+            setState(() {
+              _isLoading = false; // Останавливаем индикатор загрузки
+            });
+          }
         } else {
           print('Данные отсутствуют или имеют неверную структуру');
           setState(() {
@@ -79,82 +95,135 @@ class _ListMeliorationObjectsScreenScaffoldState
     }
   }
 
+  void _filterReclamations(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredReclamations = _reclamations.where((reclamation) {
+        return reclamation.name.toLowerCase().contains(query.toLowerCase()) ||
+            reclamation.id.toLowerCase().contains(query.toLowerCase()) ||
+            reclamation.type.toLowerCase().contains(query.toLowerCase()) ||
+            reclamation.location.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Мелиоративные объекты'),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+            child: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+            child:
+            TextField(
+              onChanged: _filterReclamations,
+              decoration: InputDecoration(
+                hintText: 'Поиск...',
+                prefixIcon: Icon(Icons.search, color: Colors.grey,), // Добавление иконки поиска
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          ),
+        ),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : _reclamations.isEmpty
+          : _filteredReclamations.isEmpty
               ? Center(child: Text('Нет доступных систем'))
               : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(children: [
-                    SearchWidget(),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _reclamations.length,
-                        itemBuilder: (context, index) {
-                          final reclamation = _reclamations[index];
-                          final properties = reclamation['#value'];
-
-                          // Извлечение значений из структуры
-                          String refSystem = properties.firstWhere(
-                              (p) => p['name']['#value'] == 'Ref',
-                              orElse: () => {
-                                    'Value': {'#value': 'N/A'}
-                                  })['Value']['#value'];
-                          String id = properties.firstWhere(
-                              (p) => p['name']['#value'] == 'Id',
-                              orElse: () => {
-                                    'Value': {'#value': 'N/A'}
-                                  })['Value']['#value'];
-                          String nameSystem = properties.firstWhere(
-                              (p) => p['name']['#value'] == 'Name',
-                              orElse: () => {
-                                    'Value': {'#value': 'N/A'}
-                                  })['Value']['#value'];
-                          String type = properties.firstWhere(
-                              (p) => p['name']['#value'] == 'Type',
-                              orElse: () => {
-                                    'Value': {'#value': 'N/A'}
-                                  })['Value']['#value'];
-                          String location = properties.firstWhere(
-                              (p) => p['name']['#value'] == 'Location',
-                              orElse: () => {
-                                    'Value': {'#value': 'N/A'}
-                                  })['Value']['#value'];
-                          String actualWear = properties
-                                  .firstWhere(
-                                      (p) =>
-                                          p['name']['#value'] == 'ActualWear',
-                                      orElse: () => {
-                                            'Value': {'#value': 'N/A'}
-                                          })['Value']['#value']
-                                  ?.toString() ??
-                              'N/A';
-                          String technicalCondition = properties.firstWhere(
-                              (p) =>
-                                  p['name']['#value'] == 'TechnicalCondition',
-                              orElse: () => {
-                                    'Value': {'#value': 'N/A'}
-                                  })['Value']['#value'];
-                          return CardMelioObjects(
-                              title: nameSystem,
-                              ein: id,
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    '/list_object_in_melio',
-                                    arguments: MyArguments(refSystem, nameSystem, '', ''));
-                              },
-                              ref: refSystem);
-                        },
-                      ),
-                    ),
-                  ]),
+    padding: const EdgeInsets.all(16.0),
+    child:
+      ListView.builder(
+                  itemCount: _filteredReclamations.length,
+                  itemBuilder: (context, index) {
+                    final reclamation = _filteredReclamations[index];
+                    return CardMelioObjects(
+                      title: reclamation.name,
+                      ein: reclamation.id,
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          '/list_object_in_melio',
+                          arguments: MyArguments(
+                              reclamation.refSystem, reclamation.name, '', ''),
+                        );
+                      }, ref: '',
+                    );
+                  },
                 ),
+    ),);
+  }
+}
+
+// CardMelioObjects(
+// title: nameObject,
+// ein: ein,
+// onTap: () {
+// Navigator.of(context).pushNamed(
+// '/object_fun_nav',
+// arguments: MyArguments(
+// refObject, refSystem!, nameSystem, nameObject));
+// },
+// ref: refObject);
+
+class MelObjects {
+  final String refSystem;
+  final String id;
+  final String name;
+  final String type;
+  final String location;
+  final String actualWear;
+  final String technicalCondition;
+
+  MelObjects({
+    required this.refSystem,
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.location,
+    required this.actualWear,
+    required this.technicalCondition,
+  });
+
+  factory MelObjects.fromJson(Map<String, dynamic> json) {
+    final properties = json['#value'];
+    return MelObjects(
+      refSystem: properties.firstWhere((p) => p['name']['#value'] == 'Ref',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      id: properties.firstWhere((p) => p['name']['#value'] == 'Id',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      name: properties.firstWhere((p) => p['name']['#value'] == 'Name',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      type: properties.firstWhere((p) => p['name']['#value'] == 'Type',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      location: properties.firstWhere((p) => p['name']['#value'] == 'Location',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
+      actualWear: properties
+              .firstWhere((p) => p['name']['#value'] == 'ActualWear',
+                  orElse: () => {
+                        'Value': {'#value': 'N/A'}
+                      })['Value']['#value']
+              ?.toString() ??
+          'N/A',
+      technicalCondition: properties.firstWhere(
+          (p) => p['name']['#value'] == 'TechnicalCondition',
+          orElse: () => {
+                'Value': {'#value': 'N/A'}
+              })['Value']['#value'],
     );
   }
 }

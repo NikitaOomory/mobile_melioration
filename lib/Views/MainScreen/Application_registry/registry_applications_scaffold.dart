@@ -88,7 +88,7 @@ class _ListApplicationsScaffoldState extends State<ListApplicationsScaffold> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _error.isNotEmpty
-          ? Center(child: Text(_error))
+          ? Center(child: Text('В системе отсутствуют заявки'))
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(

@@ -77,19 +77,20 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
           itemBuilder: (context, index) {
             final item = _data[index]['#value'];
             return Card(
+              color: Colors.white,
               margin: EdgeInsets.symmetric(vertical: 8.0),
               child: ListTile(
                 title: Text(item[5]['Value']['#value']), // Name
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Версия: ${item[1]['Value']['#value']}'), // Version
-                    Text('Version Date: ${item[2]['Value']['#value']}'), // VersionDate
-                    Text('Author: ${item[3]['Value']['#value']}'), // VersionAuthor
-                    Text('ID: ${item[4]['Value']['#value']}'), // Id
-                    Text('Location: ${item[7]['Value']['#value']}'), // Location
-                    Text('Actual Wear: ${item[8]['Value']['#value']}%'), // ActualWear
-                    Text('Technical Condition: ${item[9]['Value']['#value']}'), // TechnicalCondition
+                    Text('Номер: ${item[1]['Value']['#value']}'), // Version
+                    Text('Дата: ${item[2]['Value']['#value']}'), // VersionDate
+                    Text('Автор: ${item[3]['Value']['#value']}'), // VersionAuthor
+                    Text('ЕИН: ${item[4]['Value']['#value']}'), // Id
+                    Text('Местоположение: ${item[7]['Value']['#value']}'), // Location
+                    Text('Фактический износ: ${item[8]['Value']['#value']}%'), // ActualWear
+                    Text('Оценка тех. состояния: ${item[9]['Value']['#value']}'), // TechnicalCondition
                   ],
                 ),
               ),

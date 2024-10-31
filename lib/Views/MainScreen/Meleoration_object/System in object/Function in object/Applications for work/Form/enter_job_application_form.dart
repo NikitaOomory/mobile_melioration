@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../../Database/JobApplication/db_utils_melio_object.dart';
 import '../../../../../../../Models/melioration_object_model.dart';
@@ -21,10 +22,12 @@ class EnterJobApplicationForm extends StatefulWidget {
 }
 
 class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
-
-  DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications(); //класс для взаимодействия с локальной БД
+  DBUtilsJobApplications? dbUtilsMelioObject =
+      DBUtilsJobApplications(); //класс для взаимодействия с локальной БД
 
   final Dio _dio = Dio();
+
+  late TextEditingController _controller = TextEditingController();
 
   MeliorationObjectModel? dat;
   int? indexObjInHIVE;
@@ -34,15 +37,24 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
   String author = 'Иван Иванов';
   String nameMeliorativeObject = 'Сооружение 1';
   String ein = '30Ф-ОРО-0001-ООС-001';
-  DateTime? startDate;
-  DateTime? endDate;
+  String startDate = '31.10.2024';
+  String endDate = '';
+  String startJobDate = '';
+  String endJobDate = '';
   String description = '';
   final List<File> _attachedFiles = []; //список закреплённых файлов
-
   String refObject = '';
   String refSystem = '';
   Application? applicationObj;
   String nameObject = '';
+  DateTimeRange? selectedDateRange; //диапазон дат
+
+
+  @override
+  void dispose() {
+    _controller.dispose(); // Освобождаем ресурсы контроллера
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -69,12 +81,23 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
       isUpdateApplication = false;
     } else {
       isUpdateApplication = true;
+      selectedDateRange = DateTimeRange(
+        start: DateTime(2024, 10, 31), // 31 октября 2024 года
+        end: DateTime(2024, 11, 7),    // 7 ноября 2024 года
+      );
     }
 
-    setState(() {});
+    setState(() {
+      _controller = TextEditingController(text: description);
+      if (description == null || description.isEmpty || description == '') {
+
+      } else {
+        startJobDate = '31.10.2024';
+        endJobDate = '07.11.2024';
+      }
+    });
     super.didChangeDependencies();
   }
-
 
   Future<void> _sendApplicationForWork(String description) async {
     final String url =
@@ -86,14 +109,13 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
     final Map<String, dynamic> requestBody = {
       "ReclamationSystem": refSystem,
       "HydraulicStructure": refObject,
-      "startDate": "2024-10-28T00:00:00-05:00",
-      "startJobDate": "2024-10-28T00:00:00-05:00",
-      "endJobDate": "2024-10-30T00:00:00-05:00",
+      "startDate": "2024-10-31T00:00:00-05:00",
+      "startJobDate": "2024-10-31T00:00:00-05:00",
+      "endJobDate": "2024-11-07T00:00:00-05:00",
       "description": description,
     };
 
     try {
-      await uploadFiles(refObject, _attachedFiles);
       final response = await _dio.post(
         url,
         data: jsonEncode(requestBody), // Отправка тела запроса
@@ -106,11 +128,23 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
         ),
       );
 
+      // Обрабатываем ответ
       if (response.statusCode == 200) {
         print('--------------------------------------------------------');
         print('Заявка отправлена');
         print('--------------------------------------------------------');
         print('Response data: ${response.data}');
+
+        // Извлекаем значение Ref из ответа
+        String ref = _extractRefFromResponse(response.data);
+        if (ref.isNotEmpty) {
+          // Вызываем метод uploadFiles с полученным ref
+          await uploadFiles(ref, _attachedFiles);
+        } else {
+          print('--------------------------------------------------------');
+          print('Не удалось извлечь Ref из ответа');
+          print('--------------------------------------------------------');
+        }
       } else {
         print('--------------------------------------------------------');
         print('Ошибка отправки заявки: ${response.statusCode}');
@@ -123,24 +157,42 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
     }
   }
 
+  String _extractRefFromResponse(dynamic responseData) {
+    try {
+      // Проверяем, что ответ имеет ожидаемую структуру
+      if (responseData != null && responseData['#value'] is List) {
+        for (var item in responseData['#value']) {
+          if (item['name']['#value'] == 'Ref') {
+            return item['Value']['#value'];
+          }
+        }
+      }
+    } catch (e) {
+      print('Ошибка при извлечении Ref: $e');
+    }
+    return '';
+  }
+
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
     String username = 'tropin';
     String password = '1234';
-    String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
+    String url =
+        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
-    dio.options.headers["Authorization"] = "Basic " + base64Encode(utf8.encode('$username:$password'));
+    dio.options.headers["Authorization"] =
+        "Basic " + base64Encode(utf8.encode('$username:$password'));
 
     for (File file in files) {
       try {
         // Создаем FormData для отправки
         FormData formData = FormData.fromMap({
-          'ref': 'd7b0af7c-96be-11ef-9db5-005056907678', // Используем переданный ref
+          'ref': ref,
+          // Используем переданный ref
           'file': await MultipartFile.fromFile(
             file.path,
             filename: file.path.split('/').last,
             // Указываем Content-Type
-
           ),
         });
 
@@ -148,16 +200,17 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
         final response = await dio.post(url, data: formData);
         print(formData.fields); // Выводит поля формы
 
-
         // Обрабатываем ответ
         if (response.statusCode == 200) {
           print('--------------------------------------------------------');
           print('ФАЙЛЫ ОТПРАВИЛИСЬ');
           print('--------------------------------------------------------');
-          print('Файл ${file.path.split('/').last} успешно загружен: ${response.data}');
+          print(
+              'Файл ${file.path.split('/').last} успешно загружен: ${response.data}');
         } else {
           print('--------------------------------------------------------');
-          print('Ошибка при загрузке файла ${file.path.split('/').last}: ОТВЕТ 1С ${response.statusCode}');
+          print(
+              'Ошибка при загрузке файла ${file.path.split('/').last}: ОТВЕТ 1С ${response.statusCode}');
           print('--------------------------------------------------------');
         }
       } catch (e) {
@@ -184,7 +237,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                 onPressed: () async {
                   final ImagePicker _picker = ImagePicker();
                   final XFile? photo =
-                  await _picker.pickImage(source: ImageSource.camera);
+                      await _picker.pickImage(source: ImageSource.camera);
                   if (photo != null) {
                     setState(() {
                       _attachedFiles.add(File(photo.path));
@@ -197,7 +250,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
               TextButton(
                 onPressed: () async {
                   FilePickerResult? result =
-                  await FilePicker.platform.pickFiles(
+                      await FilePicker.platform.pickFiles(
                     allowMultiple: false,
                     type: FileType.any,
                   );
@@ -242,40 +295,28 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void _selectStartDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+  void _selectDateRange(BuildContext context) async {
+    DateTimeRange? picked = await showDateRangePicker(
       context: context,
-      initialDate: startDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
+      initialDateRange: selectedDateRange,
+      firstDate: DateTime(2024),
       lastDate: DateTime(2101),
     );
-    if (pickedDate != null && pickedDate != startDate) {
+
+    if (picked != null && picked != selectedDateRange) {
       setState(() {
-        startDate = pickedDate;
+        selectedDateRange = picked;
+        startJobDate = '${DateFormat('dd.MM.yyyy').format(selectedDateRange!.start)}';
+        endJobDate = '${DateFormat('dd.MM.yyyy').format(selectedDateRange!.end)}';
       });
     }
   }
-
-  void _selectEndDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: endDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null && pickedDate != endDate) {
-      setState(() {
-        endDate = pickedDate;
-      });
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Заявка на работу'),
+        title: const Text('        Заявка на работу'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -305,7 +346,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                   style: (const TextStyle(fontWeight: FontWeight.bold))),
               const SizedBox(height: 16),
               TextField(
-                  controller: TextEditingController(text: nameMeliorativeObject),
+                  controller:
+                      TextEditingController(text: nameMeliorativeObject),
                   readOnly: true,
                   maxLines: 2,
                   decoration: const InputDecoration(
@@ -327,138 +369,148 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => _selectStartDate(context),
-                      child: const InputDecorator(
+                      onTap: () => _selectDateRange(context),
+                      child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: 'c',
-                          // Цвет рамки, когда поле активно
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Цвет рамки при фокусе
+                            borderSide: BorderSide(color: Colors.blue),
                           ),
-                          // Цвет рамки, когда поле не активно
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey), // Цвет рамки при неактивном состоянии
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
-                        child: Text('Выберите дату'),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _selectEndDate(context),
-                      child: const InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'по',
-                          // Цвет рамки, когда поле активно
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // Цвет рамки при фокусе
+                        child: Row(children: [
+                          Icon(Icons.calendar_month, color: Colors.grey),
+                          Text(
+                            selectedDateRange != null
+                                ? ' $startJobDate - $endJobDate'
+                                : 'Выберите период',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
                           ),
-                          // Цвет рамки, когда поле не активно
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey), // Цвет рамки при неактивном состоянии
-                          ),
-                        ),
-                        child: Text('Выберите дату'),
+                        ]),
                       ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              //
-              // // Поле для описания
               TextField(
-                controller: TextEditingController(text: description),
+                controller: _controller,
                 maxLines: 5,
                 decoration: const InputDecoration(
-                labelText: 'Описание',
-                // Цвет рамки, когда поле активно
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue), // Цвет рамки при фокусе
+                  labelText: 'Описание',
+                  // Цвет рамки, когда поле активно
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 0, 78, 167)), // Цвет рамки при фокусе
+                  ),
+                  // Цвет рамки, когда поле не активно
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color:
+                            Colors.grey), // Цвет рамки при неактивном состоянии
+                  ),
                 ),
-                // Цвет рамки, когда поле не активно
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey), // Цвет рамки при неактивном состоянии
-                ),
-              ),
                 onChanged: (value) {
-                  description = value;
+                  setState(() {
+                    description = value; // Обновляем значение переменной при изменении текста
+                  });
+                },
+                onSubmitted: (value) {
+                  // Если хотите, чтобы значение обновлялось и при нажатии Enter
+                  setState(() {
+                    description = value;
+                  });
                 },
               ),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: const Color.fromARGB(255, 0, 78, 167),
-                    backgroundColor: Colors.white,
-                    // Цвет текста (синий)
-                    side: const BorderSide(
-                      color: Color.fromARGB(255, 0, 78, 167),
-                      // Синяя рамка вокруг кнопки
-                      width: 2.0,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 0, 78, 167),
+                      backgroundColor: Colors.white,
+                      // Цвет текста (синий)
+                      side: const BorderSide(
+                        color: Color.fromARGB(255, 0, 78, 167),
+                        // Синяя рамка вокруг кнопки
+                        width: 2.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(5), // Убираем закругление
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5), // Убираем закругление
-                    ),
-                  ),
-                  onPressed: _attachFile,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.download),
-                      Text('Прикрепить файл'),
-                    ],
-                  )
-                ),
+                    onPressed: _attachFile,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.download),
+                        Text('Прикрепить файл'),
+                      ],
+                    )),
               ),
 
               const SizedBox(height: 16),
               //
               ListView.builder(
-                shrinkWrap: true,
-                // Позволяет ListView занимать только необходимое пространство
-                physics: const NeverScrollableScrollPhysics(),
-                // Отключите прокрутку, если она не нужна
-                itemCount: _attachedFiles.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Row(
+                  shrinkWrap: true,
+                  // Позволяет ListView занимать только необходимое пространство
+                  physics: const NeverScrollableScrollPhysics(),
+                  // Отключите прокрутку, если она не нужна
+                  itemCount: _attachedFiles.length,
+                  itemBuilder: (context, index) {
+                    return Row(
                       children: [
-                        const Icon(Icons.file_open_rounded, color: Color.fromARGB(255, 0, 78, 167),),
-                        Text(_attachedFiles[index].path.split('/').last,
-                          style: const TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
+                        Expanded(
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                const Icon(
+                                  Icons.file_open_rounded,
+                                  color: Color.fromARGB(255, 0, 78, 167),
+                                ),
+                                const SizedBox(width: 8),
+                                // Отступ между иконкой и текстом
+                                Expanded(
+                                  child: Text(
+                                    '${truncateText(_attachedFiles[index].path.split('/').last, 25)}',
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(255, 0, 78, 167)),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Добавляем многоточие, если текст слишком длинный
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                                color: Color.fromARGB(255, 0, 78, 167),
+                              ),
+                              onPressed: () => _removeFile(index),
+                            ),
+                          ),
+                        ),
                       ],
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.close, color: Color.fromARGB(255, 0, 78, 167),),
-                      onPressed: () => _removeFile(index),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  }),
 
               const SizedBox(height: 16),
 
               SizedBox(
                 width: double.infinity,
-                // Задает ширину кнопки на всю ширину экрана
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: const Color.fromARGB(255, 0, 78, 167),
                     backgroundColor: Colors.white,
-                    // Цвет текста (синий)
                     side: const BorderSide(
                       color: Color.fromARGB(255, 0, 78, 167),
-                      // Синяя рамка вокруг кнопки
                       width: 2.0,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5), // Убираем закругление
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
                   onPressed: () {
@@ -482,11 +534,17 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                           refSystem,
                           refObject));
                       Navigator.of(context).pop('/list_enter_job_application');
-                      print('$refObject + $refSystem МЫ СОЗДАЛИ НОВУЮ!!!! ');
-                    } else if (isUpdateApplication == true && status == 'В проекте') {
+                      print(
+                          '--------------------------------------------------------');
+                      print(
+                          'МЫ СОЗДАЛИ НОВУЮ ЗАЯВКУ!!!!  $refObject + $refSystem ');
+                      print(
+                          '--------------------------------------------------------');
+                    } else if (isUpdateApplication == true &&
+                        status == 'В проекте') {
                       status == 'В проекте';
-                      dbUtilsMelioObject?.updateTask(
-                          getIndexByPrevUnit(refObject) as int,
+                      updeteTaskByDescription(
+                          description,
                           MeliorationObjectModel(
                               '',
                               '',
@@ -505,7 +563,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                               refSystem,
                               refObject));
                       Navigator.of(context).pop('/list_enter_job_application');
-                    } else if (status == 'На рассмотрении') {
+                    } else if (isUpdateApplication == true &&
+                        status == 'На рассмотрении') {
                       _showSnackbar(context,
                           'Заявка уже отправлена, её нельзя редактировать.');
                     } else {
@@ -541,8 +600,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                     if (status == 'В проекте') {
                       status = 'На рассмотрении';
                       _sendApplicationForWork(description);
-                      deleteByPrevUnit(refObject);
-
+                      deleteByDescription(refObject);
                       Navigator.of(context).pop('/list_enter_job_application');
                     } else if (status == 'На рассмотрении') {
                       _showSnackbar(context, 'Заявка уже отправлена.');
@@ -559,27 +617,53 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
       ),
     );
   }
+}
 
-  Future<int?> getIndexByPrevUnit(String prevUnit) async {
-    final box = Hive.box<MeliorationObjectModel>('tasks');
-    List<MeliorationObjectModel> allObjects = box.values.toList();
+Future<int?> updeteTaskByDescription(
+    String description, MeliorationObjectModel objUp) async {
+  DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications();
+  final box = Hive.box<MeliorationObjectModel>('tasks');
+  List<MeliorationObjectModel> allObjects = box.values.toList();
 
-    // Находим индекс объекта с переданным prevUnit
-    for (int i = 0; i < allObjects.length; i++) {
-      if (allObjects[i].prevUnit == prevUnit) {
-        return i; // Возвращаем индекс, если найден
-      }
+  // Находим индекс объекта с переданным prevUnit
+  for (int i = 0; i < allObjects.length; i++) {
+    if (allObjects[i].description == description) {
+      dbUtilsMelioObject?.updateTask(i, objUp);
+      print('--------------------------------------------------------');
+      print('Обновили из HIVE');
+      print('--------------------------------------------------------');
+      return i; // Возвращаем индекс, если найден
     }
-    return null; // Возвращаем null, если объект не найден
   }
+  print('--------------------------------------------------------');
+  print('Не найден объект из HIVE');
+  print('--------------------------------------------------------');
+  return null; // Возвращаем null, если объект не найден
+}
 
-  // Метод для удаления задачи по prevUnit
-  Future<void> deleteByPrevUnit(String prevUnit) async {
-    int? index = await getIndexByPrevUnit(prevUnit);
-    if (index != null) {
-      await dbUtilsMelioObject?.deleteTask(index);
+Future<void> deleteByDescription(String des) async {
+  DBUtilsJobApplications? dbUtilsMelioObject = DBUtilsJobApplications();
+  final box = Hive.box<MeliorationObjectModel>('tasks');
+  List<MeliorationObjectModel> allObjects = box.values.toList();
+
+  for (int i = 0; i < allObjects.length; i++) {
+    if (allObjects[i].description == des) {
+      await dbUtilsMelioObject?.deleteTask(i);
+      print('--------------------------------------------------------');
+      print('Удалили из HIVE');
+      print('--------------------------------------------------------');
     } else {
-      print('Объект с prevUnit $prevUnit не найден.');
+      print('--------------------------------------------------------');
+      print('Объект с DES не найден.');
+      print('--------------------------------------------------------');
     }
   }
+}
+
+// Метод для обрезки текста до определенного количества символов
+String truncateText(String text, int maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...'; // Добавляем многоточие
+  }
+  return text;
 }

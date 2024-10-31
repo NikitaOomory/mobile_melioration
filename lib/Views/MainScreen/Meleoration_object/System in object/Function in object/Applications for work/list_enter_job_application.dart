@@ -238,7 +238,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _error.isNotEmpty
-          ? Center(child: Text(_error))
+          ? Center(child: Text('На данный объект заявки отсутствуют'))
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child:
