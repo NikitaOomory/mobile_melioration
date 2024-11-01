@@ -13,7 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> login(String username, String password) async {
-    final String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=login';
+    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=login';
     final Dio dio = Dio();
 
     try {

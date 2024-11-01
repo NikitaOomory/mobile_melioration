@@ -21,8 +21,8 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
   }
 
   Future<void> _fetchData() async {
-    String url = 'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getHistoryReclamationSystem';
-    String username = 'tropin'; // Замените на ваш логин
+    String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getHistoryReclamationSystem';
+    String username = 'ИТР ФГБУ'; // Замените на ваш логин
     String password = '1234'; // Замените на ваш пароль
 
     try {

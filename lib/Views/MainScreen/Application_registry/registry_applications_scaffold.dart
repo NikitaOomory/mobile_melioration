@@ -28,9 +28,8 @@ class _ListApplicationsScaffoldState extends State<ListApplicationsScaffold> {
   }
 
   Future<void> _fetchApplications() async {
-    final String url =
-        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=getApplicationsForWork';
-    String username = 'tropin'; // Замените на ваши учетные данные
+    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
+    String username = 'ИТР ФГБУ'; // Замените на ваши учетные данные
     String password = '1234'; // Замените на ваши учетные данные
 
     try {

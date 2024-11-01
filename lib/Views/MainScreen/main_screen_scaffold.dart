@@ -25,7 +25,9 @@ class _MainScreenScaffold extends State<MainScreenScaffold>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarMainScreen(),
-      body: ListView.builder(
+      body: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+    child:ListView.builder(
         itemCount: arrayFunction.length,
         itemBuilder: (context, i){
           FunObject index = arrayFunction[i];
@@ -33,6 +35,7 @@ class _MainScreenScaffold extends State<MainScreenScaffold>{
             Navigator.of(context).pushNamed(index.pageURL);
           });
         }
+      ),
       ),
       bottomNavigationBar: const BottomAppBarMain(),
     );

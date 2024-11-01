@@ -100,9 +100,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
   }
 
   Future<void> _sendApplicationForWork(String description) async {
-    final String url =
-        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteApplicationForWork';
-    String username = 'tropin'; // Замените на ваши учетные данные
+    final String url = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=WriteApplicationForWork';
+    String username = 'ИТР ФГБУ'; // Замените на ваши учетные данные
     String password = '1234'; // Замените на ваши учетные данные
 
     // Тело запроса
@@ -175,10 +174,9 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
 
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
-    String username = 'tropin';
+    String username = 'ИТР ФГБУ';
     String password = '1234';
-    String url =
-        'http://192.168.7.6/MCX_melio_dev_atropin/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
+    String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
     dio.options.headers["Authorization"] =
         "Basic " + base64Encode(utf8.encode('$username:$password'));

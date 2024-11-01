@@ -52,7 +52,9 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
     return Scaffold(
       appBar: AppBar(title: Text('Сооружение $nameObject, $nameSystem',
       maxLines: 3, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),),
-      body: ListView.builder(
+      body: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+    child:ListView.builder(
           itemCount: arrayFunction.length,
           itemBuilder: (context, i){
             FunObject index = arrayFunction[i];
@@ -60,6 +62,7 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
               Navigator.of(context).pushNamed( index.pageURL, arguments: MyArguments(refObject, refSystem, nameObject, '1'));
             });
           }
+      ),
       ),
     );
   }

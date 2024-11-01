@@ -18,7 +18,7 @@ class CardMainFun extends StatelessWidget {
       onTap: () => onTap(),
       child: Card(
         elevation: 5,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8  ),
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8  ),
         child: Container(
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
           padding: const EdgeInsets.all(20),
