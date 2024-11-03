@@ -159,16 +159,6 @@ class _ListMeliorationObjectsScreenScaffoldState
   }
 }
 
-// CardMelioObjects(
-// title: nameObject,
-// ein: ein,
-// onTap: () {
-// Navigator.of(context).pushNamed(
-// '/object_fun_nav',
-// arguments: MyArguments(
-// refObject, refSystem!, nameSystem, nameObject));
-// },
-// ref: refObject);
 
 class MelObjects {
   final String refSystem;

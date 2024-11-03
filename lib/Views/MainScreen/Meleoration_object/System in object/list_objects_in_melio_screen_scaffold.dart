@@ -16,7 +16,8 @@ class ListObjectsInMelioScreenScaffold extends StatefulWidget {
 
 class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScreenScaffold> {
   final Dio _dio = Dio();
-  List<dynamic> _objects = [];
+  List<MeliorObject> _objects = [];
+  List<MeliorObject> _searchResults = []; // Список для результатов поиска
   bool _isLoading = true;
   String? refSystem;
   String nameSystem = '';
@@ -25,7 +26,6 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
   void didChangeDependencies() {
     super.didChangeDependencies();
     MyArguments? myArguments = ModalRoute.of(context)?.settings.arguments as MyArguments?;
-
     if (myArguments != null) {
       refSystem = myArguments.param1;
       nameSystem = myArguments.param2;
@@ -38,20 +38,15 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
   }
 
   Future<void> _fetchObjectsOfReclamationSystem() async {
-    final String url =
-        'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getObjectsOfReclamationSystem';
+    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getObjectsOfReclamationSystem';
     String username = 'ИТР ФГБУ';
     String password = '1234';
-
     final Map<String, dynamic> requestBody = {
       "ref": refSystem,
     };
-    print('-----------------------------------------------');
-    print(refSystem);
-    print('login password');
-    print(base64Encode(utf8.encode('$username:$password')));
-    print('-----------------------------------------------');
-
+    setState(() {
+      _isLoading = true;
+    });
     try {
       final response = await _dio.post(
         url,
@@ -63,29 +58,37 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
           },
         ),
       );
-
-
-      if (response.statusCode == 200) {
-        print('Response data: ${response.data}');
-
+      print('Response data: ${response.data}'); // Логирование ответа
+      if (response.statusCode == 200 && response.data != null) {
         var dataObject = response.data['#value']?.firstWhere(
               (item) => item['name']['#value'] == 'data',
           orElse: () => null,
         );
-
         if (dataObject != null) {
           var valueArray = dataObject['Value']['#value'];
+          List<MeliorObject> objects = [];
+          for (var item in valueArray) {
+            if (item['#type'] == 'jv8:Structure') {
+              String ref = item['#value'].firstWhere((p) => p['name']['#value'] == 'ref')['Value']['#value'];
+              String type = item['#value'].firstWhere((p) => p['name']['#value'] == 'type')['Value']['#value'];
+              String ein = item['#value'].firstWhere((p) => p['name']['#value'] == 'EIN')['Value']['#value'];
+              String name = item['#value'].firstWhere((p) => p['name']['#value'] == 'Name')['Value']['#value'];
+              objects.add(MeliorObject(ref: ref, type: type, ein: ein, name: name));
+            }
+          }
           setState(() {
-            _objects = valueArray; // Сохраняем данные для отображения
+            _objects = objects; // Сохраняем объекты
+            _searchResults = _objects; // Изначально показываем все объекты
             _isLoading = false; // Останавливаем индикатор загрузки
           });
         } else {
+          print('Ошибка: dataObject равно null');
           setState(() {
             _isLoading = false; // Останавливаем индикатор загрузки
           });
         }
       } else {
-        print('Ошибка: ${response.statusCode}'); // Выводим статус ошибки
+        print('Ошибка: ${response.statusCode} или ответ пустой');
         setState(() {
           _isLoading = false; // Останавливаем индикатор загрузки
         });
@@ -98,104 +101,125 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
     }
   }
 
+  void _searchObjects(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults = _objects; // Если запрос пустой, показываем все объекты
+      });
+    } else {
+      setState(() {
+        _searchResults = _objects.where((object) {
+          return object.ref.toLowerCase().contains(query.toLowerCase()) ||
+              object.type.toLowerCase().contains(query.toLowerCase()) ||
+              object.ein.toLowerCase().contains(query.toLowerCase()) ||
+              object.name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Сооружения и объекты:\n$nameSystem',
-          maxLines: 2,
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18),
-        ),
+        title: Text('Сооружения и объекты:\n$nameSystem', maxLines: 2, textAlign: TextAlign.start, style: TextStyle(fontSize: 18)),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _objects.isEmpty
-          ? Column(
+      body: _isLoading ? Center(child: CircularProgressIndicator()) : _objects.isEmpty ? Column(
         children: [
           CardMainFun(
-              icon: Icons.contact_page_rounded,
-              title: 'Актуализация тех. состояния',
-              description: 'Внесение изменений о техническом состоянии',
-              onTap: () {
-                Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
-              }),
-          const SizedBox(height: 40),
-          Text(
-            'В данной системе нет объектов',
-            style: TextStyle(fontSize: 18),
+            icon: Icons.contact_page_rounded,
+            title: 'Актуализация тех. состояния',
+            description: 'Внесение изменений от техническом состоянии',
+            onTap: () {
+              Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
+            },
           ),
+          const SizedBox(height: 40),
+          Text('В данной системе нет объектов', style: TextStyle(fontSize: 18)),
         ],
-      )
-          : Padding(
+      ) : Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(children: [
-          GestureDetector(
-            onTap: ()=>Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1')),
-            child: Card(
-              elevation: 5,
-              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8  ),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),),
-                padding: const EdgeInsets.all(20),
-                child:Column(children: [
-                  Row(children: [Icon(Icons.contact_page_rounded, size: 30, color: const Color.fromARGB(255, 0, 78, 167),),],),
-                  const SizedBox(height: 4),
-                  Row(children: [Text('Актуализация тех. состояния', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),],),
-                  const SizedBox(height: 4),
-                  Row(children: [Text('Внесение изменений о техническом состоянии', style: const TextStyle(color: Colors.grey),),],),
-                ],),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Поиск...',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search, color: Colors.grey), // Иконка поиска внутри поля
               ),
-
-            ),),
-          const SizedBox(height: 20),
-          SearchWidget(),
-          const SizedBox(height: 16),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _objects.length,
-              itemBuilder: (context, index) {
-                final object = _objects[index]['#value'];
-                String refObject = object.firstWhere(
-                      (p) => p['name']['#value'] == 'ref',
-                  orElse: () => {
-                    'Value': {'#value': 'N/A'}
-                  },
-                )['Value']['#value'];
-                String type = object.firstWhere(
-                      (p) => p['name']['#value'] == 'type',
-                  orElse: () => {
-                    'Value': {'#value': 'N/A'}
-                  },
-                )['Value']['#value'];
-                String nameObject = object.firstWhere(
-                      (p) => p['name']['#value'] == 'Name',
-                  orElse: () => {
-                    'Value': {'#value': 'N/A'}
-                  },
-                )['Value']['#value'];
-                String ein = object.firstWhere(
-                      (p) => p['name']['#value'] == 'EIN',
-                  orElse: () => {
-                    'Value': {'#value': 'N/A'}
-                  },
-                )['Value']['#value'];
-                return CardMelioObjects(
-                    title: nameObject,
-                    ein: ein,
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                          '/object_fun_nav',
-                          arguments: MyArguments(
-                              refObject, refSystem!, nameSystem, nameObject));
-                    },
-                    ref: refObject);
+              onChanged: (query) {
+                _searchObjects(query); // Вызов метода поиска при изменении текста
               },
             ),
-          ),
-        ]),
+            const SizedBox(height: 16),
+            CardMainFun(
+              icon: Icons.contact_page_rounded,
+              title: 'Актуализация тех. состояния',
+              description: 'Внесение изменений от техническом состоянии',
+              onTap: () {
+                Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final object = _searchResults[index];
+                  return CardMelioObjects(
+                    title: object.name,
+                    ein: object.ein,
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        '/object_fun_nav',
+                        arguments: MyArguments(object.ref, refSystem!, nameSystem, object.name),
+                      );
+                    },
+                    ref: object.ref,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+}
+
+class MeliorObject {
+  final String ref;
+  final String type;
+  final String ein;
+  final String name;
+
+  MeliorObject({
+    required this.ref,
+    required this.type,
+    required this.ein,
+    required this.name,
+  });
+
+  factory MeliorObject.fromJson(Map<String, dynamic> json) {
+    String ref = json['Value']['#value'].firstWhere(
+          (item) => item['name']['#value'] == 'ref',
+      orElse: () => {'Value': {'#value': 'N/A'}},
+    )['Value']['#value'];
+
+    String type = json['Value']['#value'].firstWhere(
+          (item) => item['name']['#value'] == 'type',
+      orElse: () => {'Value': {'#value': 'N/A'}},
+    )['Value']['#value'];
+
+    String ein = json['Value']['#value'].firstWhere(
+          (item) => item['name']['#value'] == 'EIN',
+      orElse: () => {'Value': {'#value': 'N/A'}},
+    )['Value']['#value'];
+
+    String name = json['Value']['#value'].firstWhere(
+          (item) => item['name']['#value'] == 'Name',
+      orElse: () => {'Value': {'#value': 'N/A'}},
+    )['Value']['#value'];
+
+    return MeliorObject(ref: ref, type: type, ein: ein, name: name);
   }
 }

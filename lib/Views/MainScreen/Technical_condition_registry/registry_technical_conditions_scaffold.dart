@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-// class ListTechnicalConditionsScaffold extends StatefulWidget{
 class ListTechnicalConditionsScaffold extends StatefulWidget {
   @override
   _ListTechnicalConditionsScaffoldState createState() => _ListTechnicalConditionsScaffoldState();
@@ -37,6 +36,7 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
+        print(response.data);
         if (jsonResponse['#value'] != null) {
           // Извлекаем данные из ответа
           List<dynamic> data = jsonResponse['#value'][2]['Value']['#value'];
