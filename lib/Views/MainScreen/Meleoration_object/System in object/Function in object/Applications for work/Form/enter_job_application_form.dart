@@ -531,7 +531,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                           '',
                           refSystem,
                           refObject));
-                      Navigator.of(context).pop('/list_enter_job_application');
+                      Navigator.of(context).pushReplacementNamed('/list_enter_job_application',arguments: MyArguments(refObject, refObject, nameObject, 'param4'));
                       print(
                           '--------------------------------------------------------');
                       print(
@@ -560,7 +560,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                               '',
                               refSystem,
                               refObject));
-                      Navigator.of(context).pop('/list_enter_job_application');
+                      Navigator.of(context).pushReplacementNamed('/list_enter_job_application', arguments: MyArguments(refObject, refObject, nameObject, 'param4'));
                     } else if (isUpdateApplication == true &&
                         status == 'На рассмотрении') {
                       _showSnackbar(context,
@@ -599,7 +599,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
                       status = 'На рассмотрении';
                       _sendApplicationForWork(description);
                       deleteByDescription(refObject);
-                      Navigator.of(context).pop('/list_enter_job_application');
+                      Navigator.of(context).pushReplacementNamed('/list_enter_job_application', arguments: MyArguments(refObject, refObject, nameObject, 'param4'));
                     } else if (status == 'На рассмотрении') {
                       _showSnackbar(context, 'Заявка уже отправлена.');
                     } else {

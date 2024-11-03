@@ -104,11 +104,11 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            const Icon(
-              Icons.agriculture,
-              size: 40,
-              color: Color.fromARGB(255, 255, 134, 0),
-            ), // Иконка
+          Image.asset(
+            'assets/img.png', // Используем ваше изображение
+            width: 40, // Указываем ширину
+            height: 50, // Указываем высоту
+          ),
             const SizedBox(height: 8), //
             const Text(
               'Министерство сельского хозяйства РФ',

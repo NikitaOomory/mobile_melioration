@@ -74,6 +74,15 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
     super.didChangeDependencies();
   }
 
+  Future<void> _refreshData() async {
+    // Здесь вы можете добавить логику для обновления данных.
+    // Например, имитация задержки для загрузки данных.
+    _applications = [];
+    _fetchApplications();
+    await Future.delayed(Duration(seconds: 1));
+
+  }
+
   void _addApplicationsFromMeliorationObjects() {
     List<MeliorationObjectModel> meliorationObjects = DBUtilsJobApplications().getTasks();
 
@@ -232,7 +241,12 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Заявки на работы $nameObject', maxLines: 3, style: TextStyle(fontSize: 16),),
+        title: Text('Заявки на работы $nameObject', maxLines: 3, style: TextStyle(fontSize: 16)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // Вернуться на предыдущий экран
+            },),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -241,6 +255,9 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child:
+            RefreshIndicator(
+    onRefresh: _refreshData,
+    child:
       ListView.builder(
         itemCount: _filteredApplications.length,
         itemBuilder: (context, index) {
@@ -257,6 +274,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
             );
         },
       ),
+            ),
       ),
         floatingActionButton: FloatingActionButton(onPressed: (){
         Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(refObject, refSystem,
