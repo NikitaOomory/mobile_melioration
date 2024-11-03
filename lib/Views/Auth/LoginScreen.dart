@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../Models/user.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,10 +15,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> login(String username, String password) async {
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> login(String username, String password,) async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=login';
     final Dio dio = Dio();
-
     try {
       final response = await dio.get(
         url,
@@ -25,21 +33,69 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       );
-
       print('Ответ от сервера: ${response.data}');
 
       if (response.statusCode == 200) {
+        // Сохранение логина и пароля
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('username', username);
+        await prefs.setString('password', password);
+
+        // Десериализация ответа в объект User
+        User user = parseUserFromResponse(response.data);
+
+        // Сохранение объекта User в SharedPreferences
+        String userData = jsonEncode(user.toJson());
+        await prefs.setString('userData', userData);
+
+        // Успешная авторизация
         Navigator.of(context).pushReplacementNamed('/main_screen');
       } else {
+        // Обработка ошибок авторизации
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка авторизации: ${response.statusCode}')),
         );
       }
     } catch (e) {
+      // Обработка исключений
       print('Ошибка: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
+        SnackBar(content: Text('Ошибка: ${e.toString()}')),
       );
+    }
+  }
+
+  User parseUserFromResponse(Map<String, dynamic> responseData) {
+    List<dynamic> values = responseData['#value'] ?? []; // Извлекаем массив значений
+    String status = '';
+    String userName = '';
+    String role = '';
+
+    for (var item in values) {
+      String name = item['name']['#value'] ?? ''; // Извлекаем имя
+      String value = item['Value']['#value'] ?? ''; // Извлекаем значение
+
+      // Сравниваем имя и присваиваем соответствующее значение
+      if (name == 'status') {
+        status = value;
+      } else if (name == 'user') {
+        userName = value;
+      } else if (name == 'Role') {
+        role = value;
+      }
+    }
+
+    return User(status: status, name: userName, role: role);
+  }
+
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
+
+    if (username != null && password != null) {
+      // Попробуйте выполнить вход автоматически
+      await login(username, password);
     }
   }
 

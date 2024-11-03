@@ -222,7 +222,11 @@ class _TechCondFormState extends State<TechCondForm> {
                       onPressed: () {
                           _sendReclamationData(_selectedCondition.toString(), _wearController.toString());
                           _showSnackbar(context);
+                          print('----------------------------------------');
+                          print(refObject);
+                          print('----------------------------------------');
                           Navigator.of(context).pop('/object_fun_nav');
+
                       },
                       child: Text('Обновить'),
                     ),

@@ -46,6 +46,11 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
     final Map<String, dynamic> requestBody = {
       "ref": refSystem,
     };
+    print('-----------------------------------------------');
+    print(refSystem);
+    print('login password');
+    print(base64Encode(utf8.encode('$username:$password')));
+    print('-----------------------------------------------');
 
     try {
       final response = await _dio.post(
@@ -58,6 +63,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
           },
         ),
       );
+
 
       if (response.statusCode == 200) {
         print('Response data: ${response.data}');
