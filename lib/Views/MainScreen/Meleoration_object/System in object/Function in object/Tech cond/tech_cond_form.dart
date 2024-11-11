@@ -58,16 +58,15 @@ class _TechCondFormState extends State<TechCondForm> {
   final Dio _dio = Dio();
 
   Future<void> _sendReclamationData(String tech, String num) async {
-    final String url =
-        'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteReclamationSystem';
-    String username = 'ИТР ФГБУ'; // Учетные данные
+    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteReclamationSystem';
+    String username = 'ИТР ФГБУ 2'; // Учетные данные
     String password = '1234'; // Учетные данные
 
     // Тело запроса
     final Map<String, dynamic> requestBody = {
       "ref": refObject,
       "TechnicalCondition": tech,
-      "ActualWear": 42,
+      "ActualWear": 55,
     };
 
     try {
@@ -95,7 +94,7 @@ class _TechCondFormState extends State<TechCondForm> {
 
   void _showSnackbar(BuildContext context) {
     final snackBar = SnackBar(
-      content: Text('Состояние обнавлено'),
+      content: Text('Состояние обновлено'),
       action: SnackBarAction(
         label: 'Закрыть',
         onPressed: () {

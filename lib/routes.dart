@@ -11,15 +11,15 @@ import 'Views/MainScreen/Meleoration_object/System in object/list_objects_in_mel
 import 'Views/MainScreen/Support/support_screen_scaffold.dart';
 
 final routes = {
-  '/' : (context) => LoginScreen(),
+  '/' : (context) => const LoginScreen(),
   '/main_screen' : (context) => const MainScreenScaffold(),
   '/support' : (context) => const SupportScreenScaffold(),
-  '/list_melioration_systems' : (context) => ListMeliorationObjectsScreenScaffold(),
+  '/list_melioration_systems' : (context) => const ListMeliorationObjectsScreenScaffold(),
   '/list_object_in_melio' : (context) =>  ListObjectsInMelioScreenScaffold(),
-  '/list_applications' : (context) =>  ListApplicationsScaffold(),
+  '/list_applications' : (context) =>  RegestryApplication(),
   '/list_technical_conditions' : (context) =>  ListTechnicalConditionsScaffold(),
   '/object_fun_nav' : (context) => const ObjectFunctionNavScaffold(),
   '/list_enter_job_application' : (context) =>  ListEnterJobApplication(),
-  '/enter_job_application_form' : (context) =>  EnterJobApplicationForm(),
+  '/enter_job_application_form' : (context) =>  const EnterJobApplicationForm(),
   '/tech_cond_form' : (context) => TechCondForm(),
 };

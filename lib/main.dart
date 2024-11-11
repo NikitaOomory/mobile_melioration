@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_melioration/Database/JobApplication/melioration_object_adapter.dart';
@@ -24,14 +23,14 @@ class MobileMelioration extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      supportedLocales: [
-        const Locale('ru', ''), // Русский
-        const Locale('en', ''), // Английский (при необходимости)
+      supportedLocales: const [
+        Locale('ru', ''),
+        Locale('en', ''),
       ],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor:Color.fromARGB(255, 0, 78, 167),
-        appBarTheme: AppBarTheme(backgroundColor: Colors.transparent),
+        primaryColor:const Color.fromARGB(255, 0, 78, 167),
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
         scaffoldBackgroundColor: Colors.white,
       ),
       darkTheme: ThemeData(),

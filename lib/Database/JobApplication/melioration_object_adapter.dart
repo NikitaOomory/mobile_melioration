@@ -11,7 +11,7 @@ class JobApplicationAdapter extends TypeAdapter<MeliorationObjectModel> {
 
     final name = reader.read() as String;
     final typeObject = reader.read() as String;
-    final adress = reader.read() as String;
+    final address = reader.read() as String;
     final author = reader.read() as String;
     final status = reader.read() as String;
     final ein = reader.read() as String;
@@ -26,7 +26,7 @@ class JobApplicationAdapter extends TypeAdapter<MeliorationObjectModel> {
     final prevUnit = reader.read() as String;
     final nextUnit = reader.read() as String;
 
-    return MeliorationObjectModel(name, typeObject, adress,author,status,ein,startDate,
+    return MeliorationObjectModel(name, typeObject, address,author,status,ein,startDate,
     endDate,description,files,techHealth,techConditional, startJobDate, endJobDate, prevUnit, nextUnit);
   }
 

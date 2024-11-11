@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
 import 'package:mobile_melioration/Widgets/search_widget.dart';
 
-import '../../../../Widgets/card_main_fun.dart';
+import '../../../../Widgets/CardMainFun/card_main_fun.dart';
 import '../../../../Widgets/card_melio_objects.dart';
 
 class ListObjectsInMelioScreenScaffold extends StatefulWidget {
@@ -39,7 +39,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
 
   Future<void> _fetchObjectsOfReclamationSystem() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getObjectsOfReclamationSystem';
-    String username = 'ИТР ФГБУ';
+    String username = 'ИТР ФГБУ 2';
     String password = '1234';
     final Map<String, dynamic> requestBody = {
       "ref": refSystem,
@@ -180,6 +180,26 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
               ),
             ),
           ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ClipOval(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color.fromARGB(255, 0, 78, 167), // Цвет кнопки
+          ),
+          child: SizedBox(
+            width: 56, // Ширина кнопки
+            height: 56, // Высота кнопки
+            child: FloatingActionButton(
+              onPressed: () {Navigator.of(context).pushNamedAndRemoveUntil('/main_screen', (Route<dynamic> route) => false,);},
+              backgroundColor: Colors.transparent, // Прозрачный фон для FAB
+              elevation: 0, // Убираем стандартное свечение
+              child: Icon(Icons.home, color: Colors.white), // Иконка кнопки
+            ),
+          ),
         ),
       ),
     );

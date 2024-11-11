@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
 
-import '../../../../../Models/model_function_card.dart';
-import '../../../../../Widgets/card_main_fun.dart';
+import '../../../../../Widgets/CardMainFun/model_function_card.dart';
+import '../../../../../Widgets/CardMainFun/card_main_fun.dart';
 
 class ObjectFunctionNavScaffold extends StatefulWidget{
  const ObjectFunctionNavScaffold({super.key});
@@ -63,6 +63,26 @@ class _ObjectFunctionNavScaffold extends State<ObjectFunctionNavScaffold>{
             });
           }
       ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ClipOval(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color.fromARGB(255, 0, 78, 167), // Цвет кнопки
+          ),
+          child: SizedBox(
+            width: 56, // Ширина кнопки
+            height: 56, // Высота кнопки
+            child: FloatingActionButton(
+              onPressed: () {Navigator.of(context).pushNamedAndRemoveUntil('/main_screen', (Route<dynamic> route) => false,);},
+              backgroundColor: Colors.transparent, // Прозрачный фон для FAB
+              elevation: 0, // Убираем стандартное свечение
+              child: Icon(Icons.home, color: Colors.white), // Иконка кнопки
+            ),
+          ),
+        ),
       ),
     );
   }

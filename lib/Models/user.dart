@@ -3,14 +3,12 @@ class User {
   final String name;
   final String role;
 
-  // Конструктор класса User
   User({
     required this.status,
     required this.name,
     required this.role,
   });
 
-  // Метод для создания объекта User из JSON
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       status: json['status'] ?? '',
@@ -19,13 +17,35 @@ class User {
     );
   }
 
-  // Метод для сериализации объекта User в JSON
   Map<String, dynamic> toJson() {
     return {
       'status': status,
       'user': name,
       'Role': role,
     };
+  }
+
+  User parseUserFromResponse(Map<String, dynamic> responseData) {
+    List<dynamic> values = responseData['#value'] ?? []; // Извлекаем массив значений
+    String status = '';
+    String userName = '';
+    String role = '';
+
+    for (var item in values) {
+      String name = item['name']['#value'] ?? ''; // Извлекаем имя
+      String value = item['Value']['#value'] ?? ''; // Извлекаем значение
+
+      // Сравниваем имя и присваиваем соответствующее значение
+      if (name == 'status') {
+        status = value;
+      } else if (name == 'user') {
+        userName = value;
+      } else if (name == 'Role') {
+        role = value;
+      }
+    }
+
+    return User(status: status, name: userName, role: role);
   }
 
 

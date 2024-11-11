@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_melioration/Widgets/search_widget.dart';
 
 import '../../../Models/my_arguments.dart';
 import '../../../Widgets/card_melio_objects.dart';
@@ -32,7 +31,7 @@ class _ListMeliorationObjectsScreenScaffoldState
   Future<void> _fetchReclamations() async {
     final String url =
         'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getReclamationSystem';
-    String username = 'ИТР ФГБУ';
+    String username = 'ИТР ФГБУ 2';
     String password = '1234';
 
     try {
@@ -110,24 +109,28 @@ class _ListMeliorationObjectsScreenScaffoldState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Text('Мелиоративные объекты'),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(50.0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
             child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-            child:
-            TextField(
-              onChanged: _filterReclamations,
-              decoration: InputDecoration(
-                hintText: 'Поиск...',
-                prefixIcon: Icon(Icons.search, color: Colors.grey,), // Добавление иконки поиска
-                border: OutlineInputBorder(),
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+              child: TextField(
+                onChanged: _filterReclamations,
+                decoration: InputDecoration(
+                  hintText: 'Поиск...',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  // Добавление иконки поиска
+                  border: OutlineInputBorder(),
+                ),
               ),
             ),
-          ),
           ),
         ),
       ),
@@ -136,29 +139,49 @@ class _ListMeliorationObjectsScreenScaffoldState
           : _filteredReclamations.isEmpty
               ? Center(child: Text('Нет доступных систем'))
               : Padding(
-    padding: const EdgeInsets.all(16.0),
-    child:
-      ListView.builder(
-                  itemCount: _filteredReclamations.length,
-                  itemBuilder: (context, index) {
-                    final reclamation = _filteredReclamations[index];
-                    return CardMelioObjects(
-                      title: reclamation.name,
-                      ein: reclamation.id,
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          '/list_object_in_melio',
-                          arguments: MyArguments(
-                              reclamation.refSystem, reclamation.name, '', ''),
-                        );
-                      }, ref: '',
-                    );
-                  },
+                  padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                  child: ListView.builder(
+                    itemCount: _filteredReclamations.length,
+                    itemBuilder: (context, index) {
+                      final reclamation = _filteredReclamations[index];
+                      return CardMelioObjects(
+                        title: reclamation.name,
+                        ein: reclamation.id,
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            '/list_object_in_melio',
+                            arguments: MyArguments(reclamation.refSystem,
+                                reclamation.name, '', ''),
+                          );
+                        },
+                        ref: '',
+                      );
+                    },
+                  ),
                 ),
-    ),);
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ClipOval(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color.fromARGB(255, 0, 78, 167), // Цвет кнопки
+          ),
+          child: SizedBox(
+            width: 56, // Ширина кнопки
+            height: 56, // Высота кнопки
+            child: FloatingActionButton(
+              onPressed: () {Navigator.of(context).pushNamedAndRemoveUntil('/main_screen', (Route<dynamic> route) => false,);},
+              backgroundColor: Colors.transparent, // Прозрачный фон для FAB
+              elevation: 0, // Убираем стандартное свечение
+              child: Icon(Icons.home, color: Colors.white), // Иконка кнопки
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
-
 
 class MelObjects {
   final String refSystem;

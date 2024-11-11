@@ -2,18 +2,24 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/Widgets/show_snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Models/user.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+
 class _LoginScreenState extends State<LoginScreen> {
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final ShowSnackBar _showSnackBar = ShowSnackBar();
+  User userClass = User(status: '', name: '', role: '');
 
   @override
   void initState() {
@@ -22,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> login(String username, String password,) async {
-    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=login';
+    const String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=login';
     final Dio dio = Dio();
     try {
       final response = await dio.get(
@@ -33,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       );
-      print('Ответ от сервера: ${response.data}');
 
       if (response.statusCode == 200) {
         // Сохранение логина и пароля
@@ -41,60 +46,31 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('username', username);
         await prefs.setString('password', password);
 
+        print('Ответ от сервера: ${response.data}');
+
         // Десериализация ответа в объект User
-        User user = parseUserFromResponse(response.data);
+        User user = userClass.parseUserFromResponse(response.data);
 
         // Сохранение объекта User в SharedPreferences
         String userData = jsonEncode(user.toJson());
         await prefs.setString('userData', userData);
-
-        // Успешная авторизация
+        _showSnackBar.showSnackBar(context, 'Вы успешно авторизовались!');
         Navigator.of(context).pushReplacementNamed('/main_screen');
       } else {
-        // Обработка ошибок авторизации
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка авторизации: ${response.statusCode}')),
-        );
+        print(response.statusCode);
+        _showSnackBar.showSnackBar(context, 'Ошибка авторизации: ${response.statusCode}');
       }
     } catch (e) {
-      // Обработка исключений
       print('Ошибка: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: ${e.toString()}')),
-      );
+      _showSnackBar.showSnackBar(context, 'Ошибка: ${e.toString()}');
     }
-  }
-
-  User parseUserFromResponse(Map<String, dynamic> responseData) {
-    List<dynamic> values = responseData['#value'] ?? []; // Извлекаем массив значений
-    String status = '';
-    String userName = '';
-    String role = '';
-
-    for (var item in values) {
-      String name = item['name']['#value'] ?? ''; // Извлекаем имя
-      String value = item['Value']['#value'] ?? ''; // Извлекаем значение
-
-      // Сравниваем имя и присваиваем соответствующее значение
-      if (name == 'status') {
-        status = value;
-      } else if (name == 'user') {
-        userName = value;
-      } else if (name == 'Role') {
-        role = value;
-      }
-    }
-
-    return User(status: status, name: userName, role: role);
   }
 
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
-
     if (username != null && password != null) {
-      // Попробуйте выполнить вход автоматически
       await login(username, password);
     }
   }
@@ -103,17 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Министерство сельского хозяйства Российской Федерации',
-        maxLines: 2, textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 18),),
+        title: const Text('Министерство сельского хозяйства Российской Федерации',
+          maxLines: 2, textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18),),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 255, 255, 255),
-              Color.fromARGB(61, 146, 236, 255)
-            ],
+            colors: [Color.fromARGB(255, 255, 255, 255), Color.fromARGB(61, 146, 236, 255)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -123,64 +96,53 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Card(
               color: Colors.white,
               elevation: 5,
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'Добро пожаловать!',
+                    const Text('Добро пожаловать!',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 0, 78, 167),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Авторизируйтесь, чтобы получить доступ к системе',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                    const SizedBox(height: 10),
+                    const Text('Авторизируйтесь, чтобы получить доступ к системе',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: _usernameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Логин',
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: _passwordController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Пароль',
                         border: OutlineInputBorder(),
                       ),
                       obscureText: true,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: (){
                         login(_usernameController.text, _passwordController.text);
                       },
-                      child: Text(
-                        "Войти",
-                        style: TextStyle(
-                          color: Colors.white, // Цвет текста
-                          fontSize: 16, // Размер текста
-                        ),
-                      ),
+                      child: const Text("Войти", style: TextStyle(color: Colors.white, fontSize: 16),),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 0, 78, 167), // Цвет фона кнопки
+                        backgroundColor: const Color.fromARGB(255, 0, 78, 167),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Закругление краёв
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        minimumSize: Size(double.infinity, 40), // Ширина кнопки
+                        minimumSize: const Size(double.infinity, 40),
                       ),
                     ),
                   ],

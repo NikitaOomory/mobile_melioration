@@ -18,7 +18,6 @@ class DBUtilsJobApplications{
     await box.putAt(index, task);
   }
 
-
   Future<void> deleteTask(int index) async {
     final box = Hive.box<MeliorationObjectModel>('tasks');
     await box.deleteAt(index);

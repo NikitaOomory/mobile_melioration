@@ -62,8 +62,8 @@ class MeliorationObjectModel {
       this.endDate,
       this.description,
       this.files,
-      this.techHealth, //состояние в процентах
-      this.techConditional, //состояние по словарю
+      this.techHealth, // состояние в процентах
+      this.techConditional, // состояние по словарю
       this.startJobDate,
       this.endJobDate,
       this.prevUnit,

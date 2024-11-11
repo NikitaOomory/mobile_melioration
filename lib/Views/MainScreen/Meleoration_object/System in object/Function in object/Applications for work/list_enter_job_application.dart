@@ -5,11 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
-import 'package:mobile_melioration/Database/MeliorationObjects/db_utils_melio_objects.dart';
 import 'package:mobile_melioration/Widgets/JobApplicationCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/melioration_object_model.dart';
 import '../../../../../../Models/my_arguments.dart';
+import '../../../../../../Models/user.dart';
 
 class Application {
   String ref;
@@ -53,6 +54,8 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
   String refObject = '';
   String refSystem ='';
   String nameObject ='';
+  User user = User(status: '', name: '', role: '');
+  String userData = 'Загрузка...';
 
     @override
   void didChangeDependencies() {
@@ -107,16 +110,41 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
     }
   }
 
+  Future<void> loadUserData() async {
+    User? loadedUser = await getUserFromPreferences();
+    if (loadedUser != null) {
+      setState(() {
+        user = loadedUser; // Обновляем состояние виджета
+        userData = 'Статус: ${user.status}, Имя: ${user.name}, Роль: ${user.role}';
+      });
+    } else {
+      setState(() {
+        userData = 'Данные пользователя не найдены.';
+      });
+    }
+  }
+
+  Future<User?> getUserFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userData = prefs.getString('userData');
+    if (userData != null) {
+      Map<String, dynamic> json = jsonDecode(userData);
+      return User.fromJson(json);
+    }
+    return null; // Если данных нет, возвращаем null
+  }
+
   @override
   void initState() {
     super.initState();
     _fetchApplications();
+    loadUserData();
   }
 
 
   Future<void> _fetchApplications() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
-    String username = 'ИТР ФГБУ'; // Замените на ваши учетные данные
+    String username = 'ИТР ФГБУ 2'; // Замените на ваши учетные данные
     String password = '1234'; // Замените на ваши учетные данные
 
     try {
@@ -276,11 +304,42 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
       ),
             ),
       ),
-        floatingActionButton: FloatingActionButton(onPressed: (){
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // Первая кнопка FAB
+          Positioned(
+            left: 130, // Смещение для первой кнопки
+            bottom: 10,
+            child: ClipOval(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color.fromARGB(255, 0, 78, 167), // Цвет кнопки
+                ),
+                child: SizedBox(
+                  width: 56, // Ширина кнопки
+                  height: 56, // Высота кнопки
+                  child: FloatingActionButton(
+                    onPressed: () {Navigator.of(context).pushNamedAndRemoveUntil('/main_screen', (Route<dynamic> route) => false,);},
+                    backgroundColor: Colors.transparent, // Прозрачный фон для FAB
+                    elevation: 0, // Убираем стандартное свечение
+                    child: Icon(Icons.home, color: Colors.white), // Иконка кнопки
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Вторая кнопка FAB
+          Positioned(
+            right: 130,
+            bottom: 10,// Смещение для второй кнопки
+            child: FloatingActionButton(onPressed: (){
         Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(refObject, refSystem,
             Application(
             ref: '',
-            owner: 'Тропин Александр Флександрович',
+            owner: user.name,
             reclamationSystem: '',
             hydraulicStructure: refObject,
             startDate: '',
@@ -291,6 +350,9 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
             status: 'В проекте'), nameObject));},
           child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Color.fromARGB(255, 0, 78, 167),
+      ),
+          ),
+        ],
       ),
     );
   }

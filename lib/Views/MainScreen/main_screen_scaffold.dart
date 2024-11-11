@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Widgets/bottom_app_bar_main.dart';
 
-import '../../Models/model_function_card.dart';
+import '../../Widgets/CardMainFun/model_function_card.dart';
 import '../../Widgets/app_bar_main_screen.dart';
-import '../../Widgets/card_main_fun.dart';
+import '../../Widgets/CardMainFun/card_main_fun.dart';
 
 class MainScreenScaffold extends StatefulWidget{
   const MainScreenScaffold({super.key});
