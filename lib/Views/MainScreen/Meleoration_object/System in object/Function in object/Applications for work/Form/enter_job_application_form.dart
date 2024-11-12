@@ -101,8 +101,8 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
 
   Future<void> _sendApplicationForWork(String description) async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=WriteApplicationForWork';
-    String username = 'ИТР ФГБУ 2'; // Замените на ваши учетные данные
-    String password = '1234'; // Замените на ваши учетные данные
+    String username = 'ИТР ФГБУ';
+    String password = '1234';
 
     // Тело запроса
     final Map<String, dynamic> requestBody = {
@@ -174,7 +174,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
 
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
-    String username = 'ИТР ФГБУ';
+    String username = 'ИТР ФГБУ 2';
     String password = '1234';
     String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
