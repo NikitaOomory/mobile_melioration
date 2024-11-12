@@ -29,8 +29,7 @@ class _ListMeliorationObjectsScreenScaffoldState
   }
 
   Future<void> _fetchReclamations() async {
-    final String url =
-        'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getReclamationSystem';
+    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getReclamationSystem';
     String username = 'ИТР ФГБУ 2';
     String password = '1234';
 
