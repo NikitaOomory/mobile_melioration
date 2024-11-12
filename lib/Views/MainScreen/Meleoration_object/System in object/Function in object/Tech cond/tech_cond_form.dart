@@ -66,7 +66,7 @@ class _TechCondFormState extends State<TechCondForm> {
     final Map<String, dynamic> requestBody = {
       "ref": refObject,
       "TechnicalCondition": tech,
-      "ActualWear": 28,
+      "ActualWear": int.parse(num), // Преобразуем строку в число
     };
 
     try {
@@ -75,8 +75,7 @@ class _TechCondFormState extends State<TechCondForm> {
         data: jsonEncode(requestBody), // Отправка тела запроса
         options: Options(
           headers: {
-            'Authorization':
-            'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+            'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',
             'Content-Type': 'application/json', // Указываем тип контента
           },
         ),
@@ -84,6 +83,10 @@ class _TechCondFormState extends State<TechCondForm> {
 
       if (response.statusCode == 200) {
         print('Response data: ${response.data}'); // Выводим ответ в консоль
+        print('Данные успешно отправлены на URL: $url'); // Выводим сообщение о том, что данные были отправлены
+
+        // Показываем данные, которые были отправлены
+        print('Отправленные данные: $requestBody'); // Вывод отправленных данных в консоль
       } else {
         print('Ошибка: ${response.statusCode}'); // Выводим статус ошибки
       }
@@ -209,23 +212,23 @@ class _TechCondFormState extends State<TechCondForm> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Color.fromARGB(255, 0, 78, 167), backgroundColor: Colors.white,
+                        foregroundColor: Color.fromARGB(255, 0, 78, 167),
+                        backgroundColor: Colors.white,
                         side: BorderSide(
                           color: Color.fromARGB(255, 0, 78, 167),
                           width: 2.0,
                         ),
-                        shape:  RoundedRectangleBorder(
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                       onPressed: () {
-                          _sendReclamationData(_selectedCondition.toString(), _wearController.toString());
-                          _showSnackbar(context);
-                          print('----------------------------------------');
-                          print(refObject);
-                          print('----------------------------------------');
-                          Navigator.of(context).pop('/object_fun_nav');
-
+                        _sendReclamationData(_selectedCondition.toString(), _wearController.text); // Передаем текст из контроллера
+                        _showSnackbar(context);
+                        print('----------------------------------------');
+                        print(refObject);
+                        print('----------------------------------------');
+                        Navigator.of(context).pop(); // Убираем параметр из pop, если не нужен
                       },
                       child: Text('Обновить'),
                     ),
