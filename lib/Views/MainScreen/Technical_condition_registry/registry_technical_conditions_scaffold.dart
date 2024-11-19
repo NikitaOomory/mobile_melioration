@@ -36,13 +36,20 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
-        print(response.data);
+        print(jsonResponse); // Отладочная строка для просмотра структуры ответа
+
         if (jsonResponse['#value'] != null) {
-          // Извлекаем данные из ответа
-          List<dynamic> data = jsonResponse['#value'][2]['Value']['#value'];
-          setState(() {
-            _data = data; // Сохраняем данные
-          });
+          if (jsonResponse['#value'] is List) {
+// Теперь jsonResponse['#value'] — это массив
+            List<dynamic> data = jsonResponse['#value'][2]['Value']['#value'];
+            setState(() {
+              _data = data; // Сохраняем данные
+            });
+          } else {
+// Обработка случая, если это не массив
+            Map<String, dynamic> dataMap = jsonResponse['#value'];
+// Вытаскивайте данные из dataMap в зависимости от его структуры
+          }
         }
       } else {
         setState(() {

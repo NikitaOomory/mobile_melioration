@@ -230,7 +230,7 @@ class _RegestryApplicationState extends State<RegestryApplication> {
                 filterApplications(value);
               },
               decoration: const InputDecoration(
-                hintText: 'Поиск по всем параметрам',
+                hintText: 'Поиск...',
                 border: OutlineInputBorder(),
                 filled: true,
                 fillColor: Colors.white,
