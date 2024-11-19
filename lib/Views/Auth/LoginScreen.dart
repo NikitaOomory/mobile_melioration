@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_melioration/Widgets/show_snack_bar.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Models/user.dart';
+import '../../UI-kit/Widgets/show_snack_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final ShowSnackBar _showSnackBar = ShowSnackBar();
   User userClass = User(status: '', name: '', role: '');
+  final Uri _url = Uri.parse('melio.mcx.ru/melio_pmi');
 
   @override
   void initState() {
@@ -79,9 +82,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Министерство сельского хозяйства Российской Федерации',
-          maxLines: 2, textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),),
+        title: Row(
+          children: [
+            Image.asset('assets/img.png', width: 40, height: 50,),
+            const SizedBox(width: 8),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Министерство сельского хозяйства', style: TextStyle(fontSize: 18),),
+                Text('Российской Федерации', style: TextStyle(fontSize: 18),),
+              ],),
+          ],),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -95,10 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Card(
               color: Colors.white,
-              elevation: 5,
+              elevation: 6,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(30.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -109,41 +120,62 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Color.fromARGB(255, 0, 78, 167),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const Text('Авторизируйтесь, чтобы получить доступ к системе',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    const Text('Авторизируйтесь в системе, чтобы получить доступ к приложению',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     TextField(
                       controller: _usernameController,
                       decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromARGB(255, 0, 78, 167)),
+                        ),
                         labelText: 'Логин',
+                        labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     TextField(
                       controller: _passwordController,
                       decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromARGB(255, 0, 78, 167)),
+                        ),
                         labelText: 'Пароль',
+                        labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                       ),
                       obscureText: true,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: (){
                         login(_usernameController.text, _passwordController.text);
                       },
-                      child: const Text("Войти", style: TextStyle(color: Colors.white, fontSize: 16),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 0, 78, 167),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         minimumSize: const Size(double.infinity, 40),
                       ),
+                      child: const Text("Войти", style: TextStyle(color: Colors.white, fontSize: 16),),
+                    ),
+                    SizedBox(height: 20,),
+                    ElevatedButton(
+                      onPressed: (){
+                        _launchURL();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 0, 78, 167),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        minimumSize: const Size(double.infinity, 40),
+                      ),
+                      child: const Text("Зарегистрироваться через ЕСИА", style: TextStyle(color: Colors.white, fontSize: 16),),
                     ),
                   ],
                 ),
@@ -154,4 +186,12 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  _launchURL() async {
+    final Uri url = Uri.parse('https://melio.mcx.ru/melio_pmi');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
+
 }

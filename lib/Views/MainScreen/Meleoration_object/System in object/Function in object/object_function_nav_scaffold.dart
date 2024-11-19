@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
 
-import '../../../../../Widgets/CardMainFun/model_function_card.dart';
-import '../../../../../Widgets/CardMainFun/card_main_fun.dart';
+import '../../../../../UI-kit/Widgets/CardMainFun/card_main_fun.dart';
+import '../../../../../UI-kit/Widgets/CardMainFun/model_function_card.dart';
 
 class ObjectFunctionNavScaffold extends StatefulWidget{
  const ObjectFunctionNavScaffold({super.key});

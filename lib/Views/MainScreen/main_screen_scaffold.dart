@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_melioration/Widgets/bottom_app_bar_main.dart';
 
-import '../../Widgets/CardMainFun/model_function_card.dart';
-import '../../Widgets/app_bar_main_screen.dart';
-import '../../Widgets/CardMainFun/card_main_fun.dart';
+
+import '../../UI-kit/Widgets/CardMainFun/card_main_fun.dart';
+import '../../UI-kit/Widgets/CardMainFun/model_function_card.dart';
+import '../../UI-kit/Widgets/app_bar_main_screen.dart';
+import '../../UI-kit/Widgets/bottom_app_bar_main.dart';
+
 
 class MainScreenScaffold extends StatefulWidget{
   const MainScreenScaffold({super.key});
@@ -26,7 +28,7 @@ class _MainScreenScaffold extends State<MainScreenScaffold>{
     return Scaffold(
       appBar: const AppBarMainScreen(),
       body: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+    padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
     child:ListView.builder(
         itemCount: arrayFunction.length,
         itemBuilder: (context, i){

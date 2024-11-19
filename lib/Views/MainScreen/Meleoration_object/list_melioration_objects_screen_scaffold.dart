@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Models/my_arguments.dart';
-import '../../../Widgets/card_melio_objects.dart';
+import '../../../UI-kit/Widgets/card_melio_objects.dart';
 
 class ListMeliorationObjectsScreenScaffold extends StatefulWidget {
   const ListMeliorationObjectsScreenScaffold({super.key});

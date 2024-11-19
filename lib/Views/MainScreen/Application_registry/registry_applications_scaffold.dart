@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_melioration/Widgets/JobApplicationCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/user.dart';
+import '../../../UI-kit/Widgets/JobApplicationCard.dart';
 
 class Application {
   String ref;

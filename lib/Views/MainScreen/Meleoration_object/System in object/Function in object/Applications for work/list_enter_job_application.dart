@@ -5,12 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
-import 'package:mobile_melioration/Widgets/JobApplicationCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/melioration_object_model.dart';
 import '../../../../../../Models/my_arguments.dart';
 import '../../../../../../Models/user.dart';
+import '../../../../../../UI-kit/Widgets/JobApplicationCard.dart';
 
 class Application {
   String ref;
@@ -90,7 +90,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
     List<MeliorationObjectModel> meliorationObjects = DBUtilsJobApplications().getTasks();
 
     for (var meliorationObject in meliorationObjects) {
-      // Создаем Application на основе MeliorationObjectModel
+
       Application application = Application(
         ref: meliorationObject.prevUnit, // Или другое соответствующее поле
         owner: 'Тропин Александр Александрович',
@@ -334,7 +334,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
           // Вторая кнопка FAB
           Positioned(
             right: 130,
-            bottom: 10,// Смещение для второй кнопки
+            bottom: 10,
             child: FloatingActionButton(onPressed: (){
         Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(refObject, refSystem,
             Application(

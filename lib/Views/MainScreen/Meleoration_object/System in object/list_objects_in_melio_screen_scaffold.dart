@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
-import 'package:mobile_melioration/Widgets/search_widget.dart';
 
-import '../../../../Widgets/CardMainFun/card_main_fun.dart';
-import '../../../../Widgets/card_melio_objects.dart';
+import '../../../../UI-kit/Widgets/CardMainFun/card_main_fun.dart';
+import '../../../../UI-kit/Widgets/card_melio_objects.dart';
+
 
 class ListObjectsInMelioScreenScaffold extends StatefulWidget {
   @override
