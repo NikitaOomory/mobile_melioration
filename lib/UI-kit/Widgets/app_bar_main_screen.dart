@@ -67,7 +67,7 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/image.png'),
+            image: AssetImage('assets/image.jpg'),
             fit: BoxFit.fitWidth,
           ),
         ),
