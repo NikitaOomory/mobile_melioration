@@ -19,7 +19,7 @@ final routes = {
   '/list_applications' : (context) =>  RegestryApplication(),
   '/list_technical_conditions' : (context) =>  ListTechnicalConditionsScaffold(),
   '/object_fun_nav' : (context) => const ObjectFunctionNavScaffold(),
-  '/list_enter_job_application' : (context) =>  ListEnterJobApplication(),
-  '/enter_job_application_form' : (context) =>  const EnterJobApplicationForm(),
+  '/list_enter_job_application' : (context) =>   ListEnterJobApplication(),
+  '/enter_job_application_form' : (context) =>   EnterJobApplicationForm(),
   '/tech_cond_form' : (context) => TechCondForm(),
 };

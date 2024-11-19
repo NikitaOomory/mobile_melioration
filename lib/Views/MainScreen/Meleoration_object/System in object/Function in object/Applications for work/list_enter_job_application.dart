@@ -336,18 +336,26 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
             right: 130,
             bottom: 10,
             child: FloatingActionButton(onPressed: (){
-        Navigator.of(context).pushNamed('/enter_job_application_form', arguments: MyArguments(refObject, refSystem,
-            Application(
-            ref: '',
-            owner: user.name,
-            reclamationSystem: '',
-            hydraulicStructure: refObject,
-            startDate: '',
-            startJobDate: 'startJobDate',
-            endJobDate: 'endJobDate',
-            description: '',
-            number: 'number',
-            status: 'В проекте'), nameObject));},
+              Navigator.of(context).pushNamed(
+                '/enter_job_application_form',
+                arguments: MyArguments(
+                    refObject,
+                    refSystem,
+                    Application(
+                        ref: '',
+                        owner: user.name,
+                        reclamationSystem: '',
+                        hydraulicStructure: refObject,
+                        startDate: DateTime.now().toIso8601String(), // Замените на актуальную дату
+                        startJobDate: DateTime.now().toIso8601String(), // Поставьте актуальную дату
+                        endJobDate: DateTime.now().add(Duration(days: 7)).toIso8601String(), // Например, через 7 дней
+                        description: '',
+                        number: 'number',
+                        status: 'В проекте'
+                    ),
+                    nameObject
+                ),
+              );},
           child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Color.fromARGB(255, 0, 78, 167),
       ),
