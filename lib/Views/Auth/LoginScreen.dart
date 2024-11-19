@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _launchURL() async {
-    final Uri url = Uri.parse('https://melio.mcx.ru/melio_site/');
+    final Uri url = Uri.parse('https://melio.mcx.ru/melio_pmi');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $_url');
     }

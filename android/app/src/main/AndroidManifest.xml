@@ -3,7 +3,7 @@
         <uses-permission android:name="android.permission.INTERNET"/>
 
         <application
-        android:label="mobile_melioration"
+        android:label="ЛК ИТР ФГБУ"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
