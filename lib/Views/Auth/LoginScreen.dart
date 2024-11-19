@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final ShowSnackBar _showSnackBar = ShowSnackBar();
   User userClass = User(status: '', name: '', role: '');
-  final Uri _url = Uri.parse('melio.mcx.ru/melio_pmi');
+  final Uri _url = Uri.parse('https://melio.mcx.ru/melio_site/');
 
   @override
   void initState() {
@@ -169,13 +169,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         _launchURL();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 0, 78, 167),
+                        side: const BorderSide(
+                          color: Color.fromARGB(255, 0, 78, 167),
+                          width: 2
+                        ),
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
                         minimumSize: const Size(double.infinity, 40),
                       ),
-                      child: const Text("Зарегистрироваться через ЕСИА", style: TextStyle(color: Colors.white, fontSize: 16),),
+                      child: Row(children: [
+                        Image.asset('assets/img_1.png', width: 30, height: 30,),
+                        const Text(" Войти через Госуслуги (ЕСИА)", style: TextStyle(color: Color.fromARGB(255, 0, 78, 167), fontSize: 15, fontWeight: FontWeight.bold),),
+                      ],)
                     ),
                   ],
                 ),
@@ -188,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _launchURL() async {
-    final Uri url = Uri.parse('https://melio.mcx.ru/melio_pmi');
+    final Uri url = Uri.parse('https://melio.mcx.ru/melio_site/');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $_url');
     }

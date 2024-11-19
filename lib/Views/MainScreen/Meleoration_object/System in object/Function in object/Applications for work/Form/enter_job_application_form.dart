@@ -61,32 +61,43 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
       log('You must provide args');
       return;
     }
+
+// Проверьте, что передан аргумент
     if (args.param1 is! String) {
       log('You must provide String args');
       return;
     }
+
     applicationObj = args.param3 as Application;
     refObject = args.param1;
     refSystem = args.param2;
     status = applicationObj!.status;
     author = applicationObj!.owner;
     nameMeliorativeObject = args.param4;
-    _controller.text = applicationObj!.description ?? ''; // Установка текста контроллера
 
-    // Установка диапазона дат
-    if (applicationObj!.description != null && applicationObj!.description.isNotEmpty) {
-      isUpdateApplication = true;
-      selectedDateRange = DateTimeRange(
-        start: DateTime(2024, 10, 31),
-        end: DateTime(2024, 11, 7),
-      );
-      startJobDate = '31.10.2024';
-      endJobDate = '07.11.2024';
-    } else {
+// Если это новая заявка
+    if (applicationObj == null) {
       isUpdateApplication = false;
-      selectedDateRange = null;
-      startJobDate = '';
-      endJobDate = '';
+      _controller.text = ''; // Очищаем поле описания
+      selectedDateRange = null; // Очищаем диапазон дат
+    } else {
+// Предзаполнение для существующего объекта
+      isUpdateApplication = true;
+      _controller.text = applicationObj!.description ?? ''; // Установка текста контроллера
+
+// Установка диапазона дат
+      if (applicationObj!.description != null && applicationObj!.description.isNotEmpty) {
+        selectedDateRange = DateTimeRange(
+          start: DateTime(2024, 10, 31), // Пример значения, замените на приложение
+          end: DateTime(2024, 11, 7),
+        );
+        startJobDate = DateFormat('dd.MM.yyyy').format(selectedDateRange!.start);
+        endJobDate = DateFormat('dd.MM.yyyy').format(selectedDateRange!.end);
+      } else {
+        selectedDateRange = null;
+        startJobDate = '';
+        endJobDate = '';
+      }
     }
   }
 
@@ -102,7 +113,7 @@ class _EnterJobApplicationForm extends State<EnterJobApplicationForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Поля для отображения информации
+// Поля для отображения информации
               TextField(
                 controller: TextEditingController(text: status),
                 readOnly: true,
