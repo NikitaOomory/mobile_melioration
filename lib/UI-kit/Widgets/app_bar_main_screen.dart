@@ -134,19 +134,30 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
   }
 
   void _showRoleDialog(BuildContext context, User user) {
-    showDialog(context: context, barrierDismissible: true,
+    showDialog(
+      context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(16.0), // Увеличение радиуса для округления углов
           ),
+          elevation: 5, // Тень
           child: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
             width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.3,
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0), // Увеличение радиуса для округления углов
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: Offset(0, 5), // Смещение тени
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,21 +169,22 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
                     Expanded(
                       child: Text(
                         'Роль: ${user.role}',
-                        style: const TextStyle(fontSize: 18.0,),
+                        style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold), // Увеличение шрифта и жирный текст
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     const Icon(Icons.person, color: Color.fromARGB(255, 0, 78, 167), size: 24.0),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'ФИО: ${user.name}',
                         style: const TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold, // Увеличение шрифта и жирный текст
                         ),
                       ),
                     ),
@@ -191,8 +203,9 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8), // Закругленные углы
                         ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Изменение размера кнопки
                       ),
-                      child: const Text('Закрыть', style: TextStyle(color: Colors.white),),
+                      child: const Text('Закрыть', style: TextStyle(color: Colors.white)),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -201,10 +214,11 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 182, 0, 0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // Закругленные углы
+                          borderRadius: BorderRadius.circular(8), // Закругленные углы
                         ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Изменение размера кнопки
                       ),
-                      child: const Text('Выход', style: TextStyle(color: Colors.white),),
+                      child: const Text('Выход', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),

@@ -253,7 +253,7 @@ class _RegestryApplicationState extends State<RegestryApplication> {
               var application = _filteredApplications[index];
               return JobApplicationCard(
                 status: application.status,
-                title: objectName,
+                title: application.objectName,
                 requestNumber: application.number,
                 requestDate: application.startDate,
                 author: application.owner,
@@ -313,13 +313,12 @@ class _RegestryApplicationState extends State<RegestryApplication> {
         _filteredApplications = _applications.where((app) {
           return app.owner.toLowerCase().contains(query.toLowerCase()) ||
               app.number.toLowerCase().contains(query.toLowerCase()) ||
-              app.reclamationSystem.toLowerCase().contains(
-                  query.toLowerCase()) ||
-              app.hydraulicStructure.toLowerCase().contains(
-                  query.toLowerCase()) ||
+              app.reclamationSystem.toLowerCase().contains(query.toLowerCase()) ||
+              app.hydraulicStructure.toLowerCase().contains(query.toLowerCase()) ||
               app.startDate.toLowerCase().contains(query.toLowerCase()) ||
               app.endJobDate.toLowerCase().contains(query.toLowerCase()) ||
               app.description.toLowerCase().contains(query.toLowerCase()) ||
+              app.objectName.toLowerCase().contains(query.toLowerCase()) ||
               app.status.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
