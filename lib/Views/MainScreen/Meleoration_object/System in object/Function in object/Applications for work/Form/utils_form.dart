@@ -10,16 +10,24 @@ class UtilsForm{
       List<File> attachedFiles) async {
 
     const String url = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=WriteApplicationForWork';
-    String username = 'ИТР ФГБУ';
+    String username = 'ИТР ФГБУ 2';
     String password = '1234';
+
+    DateTime startDate = DateTime.now();
 
     final Map<String, dynamic> requestBody = {
       "ReclamationSystem": refSystem,
       "HydraulicStructure": refObject,
-      "startDate": "2024-11-12T00:00:00-05:00",
-      "startJobDate": "2024-11-12T00:00:00-05:00",
-      "endJobDate": "2024-11-16T00:00:00-05:00",
+      "startDate": formatDate(startDate),
+      "startJobDate": startJobDate,
+      "endJobDate": endJobDate,
       "description": description,
+      // "startDate": DateTime.now().toIso8601String(),
+      // "startJobDate": startJobDate,
+      // "endJobDate": endJobDate,
+      // "startDate": "2024-11-12T00:00:00-05:00", //todo: проблема в формате даты скорее всего
+      // "startJobDate": "2024-11-12T00:00:00-05:00",
+      // "endJobDate": "2024-11-16T00:00:00-05:00",
     };
 
     try {
@@ -39,6 +47,7 @@ class UtilsForm{
       if (response.statusCode == 200) {
         print('--------------------------------------------------------');
         print('Заявка отправлена');
+        print('${formatDate(startDate)}, $startJobDate, $endJobDate');
         print('--------------------------------------------------------');
         print('Response data: ${response.data}');
 
@@ -83,7 +92,7 @@ class UtilsForm{
 
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
-    String username = 'ИТР ФГБУ';
+    String username = 'ИТР ФГБУ 2';
     String password = '1234';
     String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
@@ -93,12 +102,10 @@ class UtilsForm{
       try {
         // Создаем FormData для отправки
         FormData formData = FormData.fromMap({
-          'ref': ref,
-          // Используем переданный ref
+          'ref': ref, // Используем переданный ref
           'file': await MultipartFile.fromFile(
             file.path,
-            filename: file.path.split('/').last,
-            // Указываем Content-Type
+            filename: file.path.split('/').last, // Указываем Content-Type
           ),
         });
 
@@ -126,4 +133,10 @@ class UtilsForm{
       }
     }
   }
+
+  String formatDate(DateTime date) {
+// Преобразуем в строку формата ISO 8601
+    return '${date.toIso8601String().split('T')[0]}T00:00:00-05:00';
+  }
+
 }

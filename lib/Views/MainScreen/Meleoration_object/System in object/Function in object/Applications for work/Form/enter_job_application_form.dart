@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
 import 'package:mobile_melioration/Models/melioration_object_model.dart';
+import 'package:mobile_melioration/Views/MainScreen/Meleoration_object/System%20in%20object/Function%20in%20object/Applications%20for%20work/Form/utils_form.dart';
 
 import '../../../../../../../Models/my_arguments.dart';
 import '../../../../../../../UI-kit/Widgets/show_snack_bar.dart';
@@ -19,6 +21,7 @@ class EnterJobApplicationForm extends StatefulWidget {
 class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
   final ShowSnackBar showSnackBar = ShowSnackBar();
   DBUtilsJobApplications dbUtilsJobApplications = DBUtilsJobApplications();
+  final Dio _dio = Dio();
 
   Application? application; // Объект заявки
   late TextEditingController _descriptionController; // Контроллер для описания
@@ -274,6 +277,7 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                       )
                   );
                   print('Мы создали новую заявку! ${_descriptionController.text} + ${application!.startDate}');
+                  Navigator.of(context).pop('/list_enter_job_application');
                 },
                 child: const Text('Сохранить проект', style: TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
               ),
@@ -305,7 +309,25 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  if (application!.status == 'В проекте') {
+                    application!.status = 'На рассмотрении';
+                    UtilsForm util = UtilsForm();
+                    util.sendApplicationForWork(
+                        refSystem,
+                        refObject,
+                        '${formatDate(selectedDateRange!.start)}',
+                        '${formatDate(selectedDateRange!.end)}',
+                        _descriptionController.text,
+                        _dio,
+                        _attachedFiles);
+                    Navigator.of(context).pop('/list_enter_job_application');
+                  } else if (application!.status == 'На рассмотрении') {
+                    showSnackBar.showSnackBar(context, 'Заявка уже отправлена.');
+                  } else {
+                    showSnackBar.showSnackBar(context, 'Ошибка статусной модели.');
+                  }
+                },
                 child: const Text('Отправить'),
               ),
             ),
@@ -314,6 +336,11 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
       ),
       ),
     );
+  }
+
+  String formatDate(DateTime date) {
+// Преобразуем в строку формата ISO 8601
+    return '${date.toIso8601String().split('T')[0]}T00:00:00-05:00';
   }
 
   Future<void> _attachFile() async {
