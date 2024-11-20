@@ -86,7 +86,7 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
-                      fontWeight: FontWeight.w200,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
                 ),
@@ -99,14 +99,14 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
               ],
             ),
             const SizedBox(height: 8),
-          Image.asset('assets/img.png', width: 50, height: 50,),
+          Image.asset('assets/img.png', width: 60, height: 60,),
             const SizedBox(height: 8), //
             const Text(
               'Министерство сельского хозяйства РФ',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
-                fontWeight: FontWeight.w200,
+                fontWeight: FontWeight.w300,
               ),
             ),
             const SizedBox(height: 4),
@@ -122,7 +122,7 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
-                  fontWeight: FontWeight.w200,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ),
