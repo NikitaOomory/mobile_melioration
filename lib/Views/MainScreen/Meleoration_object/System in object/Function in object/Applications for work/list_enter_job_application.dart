@@ -93,7 +93,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
 
       Application application = Application(
         ref: meliorationObject.prevUnit, // Или другое соответствующее поле
-        owner: 'Тропин Александр Александрович',
+        owner: '',
         reclamationSystem: '', // Например, тип объекта
         hydraulicStructure: meliorationObject.nextUnit, // Например, адрес
         startDate: '2024-10-26',
@@ -144,7 +144,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
 
   Future<void> _fetchApplications() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
-    String username = 'ИТР ФГБУ 2'; // Замените на ваши учетные данные
+    String username = 'ИТР ФГБУ'; // Замените на ваши учетные данные
     String password = '1234'; // Замените на ваши учетные данные
 
     try {

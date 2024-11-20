@@ -22,6 +22,8 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
   final ShowSnackBar showSnackBar = ShowSnackBar();
   DBUtilsJobApplications dbUtilsJobApplications = DBUtilsJobApplications();
   final Dio _dio = Dio();
+  bool isUpdate = false;
+  int? indexObjectFromDB = -1;
 
   Application? application; // Объект заявки
   late TextEditingController _descriptionController; // Контроллер для описания
@@ -39,7 +41,7 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
   }
 
   @override
-  void didChangeDependencies() {
+  Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     if (!_initialized) {
       final MyArguments args = ModalRoute
@@ -58,7 +60,29 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
         );
         _initialized = true;
         nameObject = args.param4;
+        someAsyncMethod();
       }
+    }
+  }
+
+  Future<void> someAsyncMethod() async {
+    indexObjectFromDB = await dbUtilsJobApplications.findTaskIndex(
+      status: application!.status,
+      description: _descriptionController.text,
+      startJobDate: DateFormat('dd.MM.yyyy').format(selectedDateRange!.start),
+      endJobDate: DateFormat('dd.MM.yyyy').format(selectedDateRange!.end),
+      prevUnit: refSystem,
+      nextUnit: refObject,
+    );
+
+    setState(() {
+      isUpdate = indexObjectFromDB != -1; // Устанавливаем флаг обновления
+    });
+
+    if (isUpdate) {
+      print('Нашли такой объект с индексом $indexObjectFromDB');
+    } else {
+      print('Не нашли такой объект $indexObjectFromDB');
     }
   }
 
@@ -254,35 +278,41 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                   ),
                 ),
                 onPressed: () {
-                  dbUtilsJobApplications.addTask(
-                      MeliorationObjectModel(
-                        '',
-                        '',
-                        '',
-                        application!.owner,
-                        application!.status,
-                        '',
-                        application!.startDate,
-                        '',
-                        _descriptionController.text,
-                        'files',
-                        '',
-                        '',
-                        DateFormat('dd.MM.yyyy').format(
-                            selectedDateRange!.start).toString(),
-                        DateFormat('dd.MM.yyyy').format(
-                            selectedDateRange!.start).toString(),
-                        refSystem,
-                        refObject,
-                      )
+                  MeliorationObjectModel object = MeliorationObjectModel(
+                    '',
+                    '',
+                    '',
+                    application!.owner,
+                    application!.status,
+                    '',
+                    application!.startDate,
+                    '',
+                    _descriptionController.text,
+                    'files',
+                    '',
+                    '',
+                    DateFormat('dd.MM.yyyy').format(selectedDateRange!.start).toString(),
+                    DateFormat('dd.MM.yyyy').format(selectedDateRange!.end).toString(),
+                    refSystem,
+                    refObject,
                   );
-                  print('Мы создали новую заявку! ${_descriptionController.text} + ${application!.startDate}');
-                  Navigator.of(context).pop('/list_enter_job_application');
+                  if (application!.status == 'В проекте' && isUpdate == false) {
+                    dbUtilsJobApplications.addTask(object);
+                    print('Мы создали новую заявку! ${_descriptionController.text} + ${application!.startDate}');
+                    Navigator.of(context).pop('/list_enter_job_application');
+                  }else if(application!.status == 'В проекте' && isUpdate == true){
+                    dbUtilsJobApplications.updateTask(indexObjectFromDB!, object);
+                    print('Мы обновили заявку с индексом $indexObjectFromDB');
+                    Navigator.of(context).pop('/list_enter_job_application');
+                  }
+                  else{
+                    showSnackBar.showSnackBar(context, 'Заявка уже отправлена, её нельзя редактировать.');
+                  }
                 },
                 child: const Text('Сохранить проект', style: TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
               ),
             ),
-            if (application?.status == 'В проекте') // Проверка статуса
+            if (application?.status == 'В проекте' && isUpdate == true) // Проверка статуса
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -293,7 +323,11 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    dbUtilsJobApplications.deleteTask(indexObjectFromDB!);
+                    print('Мы удалили заявку с индексом $indexObjectFromDB');
+                    Navigator.of(context).pop('/list_enter_job_application');
+                  },
                   child: const Text('Удалить проект'),
                 ),
               ),
@@ -321,11 +355,11 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                         _descriptionController.text,
                         _dio,
                         _attachedFiles);
+                    dbUtilsJobApplications.deleteTask(indexObjectFromDB!);
+                    print('Мы удалили заявку с индексом $indexObjectFromDB из БД');
                     Navigator.of(context).pop('/list_enter_job_application');
-                  } else if (application!.status == 'На рассмотрении') {
+                  } else{
                     showSnackBar.showSnackBar(context, 'Заявка уже отправлена.');
-                  } else {
-                    showSnackBar.showSnackBar(context, 'Ошибка статусной модели.');
                   }
                 },
                 child: const Text('Отправить'),

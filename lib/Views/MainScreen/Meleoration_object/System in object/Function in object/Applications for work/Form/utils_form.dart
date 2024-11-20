@@ -10,7 +10,7 @@ class UtilsForm{
       List<File> attachedFiles) async {
 
     const String url = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=WriteApplicationForWork';
-    String username = 'ИТР ФГБУ 2';
+    String username = 'ИТР ФГБУ';
     String password = '1234';
 
     DateTime startDate = DateTime.now();
@@ -91,7 +91,7 @@ class UtilsForm{
 
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
-    String username = 'ИТР ФГБУ 2';
+    String username = 'ИТР ФГБУ';
     String password = '1234';
     String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 

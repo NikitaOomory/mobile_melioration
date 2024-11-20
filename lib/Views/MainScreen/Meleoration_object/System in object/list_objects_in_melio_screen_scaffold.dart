@@ -39,7 +39,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
 
   Future<void> _fetchObjectsOfReclamationSystem() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getObjectsOfReclamationSystem';
-    String username = 'ИТР ФГБУ 2';
+    String username = 'ИТР ФГБУ';
     String password = '1234';
     final Map<String, dynamic> requestBody = {
       "ref": refSystem,

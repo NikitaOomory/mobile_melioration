@@ -22,4 +22,32 @@ class DBUtilsJobApplications{
     final box = Hive.box<MeliorationObjectModel>('tasks');
     await box.deleteAt(index);
   }
+
+  Future<int> findTaskIndex({
+    required String status,
+    required String description,
+    required String startJobDate,
+    required String endJobDate,
+    required String prevUnit,
+    required String nextUnit,
+  }) async {
+    final box = Hive.box<MeliorationObjectModel>('tasks');
+
+// Перебираем все задачи в хранилище
+    for (int i = 0; i < box.length; i++) {
+      final task = box.getAt(i) as MeliorationObjectModel;
+
+// Проверяем условия на совпадение
+      if (task.status == status &&
+          task.description == description &&
+          task.startJobDate == startJobDate &&
+          task.endJobDate == endJobDate &&
+          task.prevUnit == prevUnit &&
+          task.nextUnit == nextUnit) {
+        return i; // Возвращаем индекс найденной задачи
+      }
+    }
+
+    return -1; // Если не найден, возвращаем -1
+  }
 }

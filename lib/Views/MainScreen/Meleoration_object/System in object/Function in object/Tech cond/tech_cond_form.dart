@@ -59,7 +59,7 @@ class _TechCondFormState extends State<TechCondForm> {
 
   Future<void> _sendReclamationData(String tech, String num) async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteReclamationSystem';
-    String username = 'ИТР ФГБУ 2'; // Учетные данные
+    String username = 'ИТР ФГБУ'; // Учетные данные
     String password = '1234'; // Учетные данные
 
     // Тело запроса
