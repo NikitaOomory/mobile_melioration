@@ -58,7 +58,7 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Ошибка: $e';
+        _errorMessage = 'Нет данных об обновлениях';
       });
     } finally {
       setState(() {
@@ -78,7 +78,7 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
         child: _isLoading
             ? Center(child: CircularProgressIndicator())
             : _errorMessage.isNotEmpty
-            ? Center(child: Text(_errorMessage, style: TextStyle(color: Colors.red)))
+            ? Center(child: Text(_errorMessage,))
             : ListView.builder(
           itemCount: _data.length,
           itemBuilder: (context, index) {
