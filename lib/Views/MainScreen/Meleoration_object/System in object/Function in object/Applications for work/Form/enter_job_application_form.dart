@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
+import 'package:mobile_melioration/Models/melioration_object_model.dart';
 
 import '../../../../../../../Models/my_arguments.dart';
 import '../../../../../../../UI-kit/Widgets/show_snack_bar.dart';
@@ -16,15 +18,16 @@ class EnterJobApplicationForm extends StatefulWidget {
 
 class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
   final ShowSnackBar showSnackBar = ShowSnackBar();
+  DBUtilsJobApplications dbUtilsJobApplications = DBUtilsJobApplications();
 
   Application? application; // Объект заявки
   late TextEditingController _descriptionController; // Контроллер для описания
   DateTimeRange? selectedDateRange; // Диапазон выбранных дат
-  DateTime? _startJobApplication; // Начальная дата работы
-  DateTime? _endJobApplication; // Конечная дата работы
   bool _initialized = false; // Флаг для отслеживания инициализации
   String nameObject = 'Название объекта отсутствует';
   final List<File> _attachedFiles = []; //список прикреплённых файлов
+  String refSystem ='';
+  String refObject ='';
 
   @override
   void initState() {
@@ -40,18 +43,34 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
           .of(context)
           ?.settings
           .arguments as MyArguments;
-
+      refObject = args.param1;
+      refSystem = args.param2;
       application = args.param3; // Получаем объект Application
       if (application != null) {
         _descriptionController.text = application!.description;
         // Устанавливаем начальный диапазон если они известны
         selectedDateRange = DateTimeRange(
-          start: DateTime.parse(application!.startJobDate),
-          end: DateTime.parse(application!.endJobDate),
+          start: parseDate(application!.startJobDate), // Преобразуем формат
+          end: parseDate(application!.endJobDate), // Преобразуем формат
         );
         _initialized = true;
         nameObject = args.param4;
       }
+    }
+  }
+
+  // Функция для парсинга даты из строкового значения
+  DateTime parseDate(String dateString) {
+    try {
+// Пробуем парсить в формате ISO 8601
+      return DateTime.parse(dateString);
+    } catch (e) {
+// Если не удается, пробуем парсить в формате dd.MM.yyyy
+      final parts = dateString.split('.');
+      if (parts.length == 3) {
+        return DateTime(int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
+      }
+      throw FormatException("Неверный формат даты. Ожидается dd.MM.yyyy или ISO 8601");
     }
   }
 
@@ -201,9 +220,7 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '${truncateText(_attachedFiles[index].path
-                                    .split('/')
-                                    .last, 25)}',
+                                '${truncateText(_attachedFiles[index].path.split('/').last, 25)}',
                                 style: const TextStyle(
                                     color: Color.fromARGB(255, 0, 78, 167)),
                                 overflow: TextOverflow.ellipsis,
@@ -233,7 +250,31 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  dbUtilsJobApplications.addTask(
+                      MeliorationObjectModel(
+                        '',
+                        '',
+                        '',
+                        application!.owner,
+                        application!.status,
+                        '',
+                        application!.startDate,
+                        '',
+                        _descriptionController.text,
+                        'files',
+                        '',
+                        '',
+                        DateFormat('dd.MM.yyyy').format(
+                            selectedDateRange!.start).toString(),
+                        DateFormat('dd.MM.yyyy').format(
+                            selectedDateRange!.start).toString(),
+                        refSystem,
+                        refObject,
+                      )
+                  );
+                  print('Мы создали новую заявку! ${_descriptionController.text} + ${application!.startDate}');
+                },
                 child: const Text('Сохранить проект', style: TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
               ),
             ),
