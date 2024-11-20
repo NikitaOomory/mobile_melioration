@@ -16,16 +16,15 @@ class UtilsForm{
     DateTime startDate = DateTime.now();
 
     final Map<String, dynamic> requestBody = {
+      "ref": "",
       "ReclamationSystem": refSystem,
       "HydraulicStructure": refObject,
       "startDate": formatDate(startDate),
       "startJobDate": startJobDate,
       "endJobDate": endJobDate,
       "description": description,
-      // "startDate": DateTime.now().toIso8601String(),
-      // "startJobDate": startJobDate,
-      // "endJobDate": endJobDate,
-      // "startDate": "2024-11-12T00:00:00-05:00", //todo: проблема в формате даты скорее всего
+
+      // "startDate": "2024-11-12T00:00:00-05:00",
       // "startJobDate": "2024-11-12T00:00:00-05:00",
       // "endJobDate": "2024-11-16T00:00:00-05:00",
     };
