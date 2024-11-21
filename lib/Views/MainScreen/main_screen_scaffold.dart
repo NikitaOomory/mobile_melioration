@@ -18,7 +18,7 @@ class MainScreenScaffold extends StatefulWidget{
 class _MainScreenScaffold extends State<MainScreenScaffold>{
 
   List<FunObject> arrayFunction = [
-    FunObject(Icons.settings_outlined, 'Мелиоративные объект', 'Системы / ОР ГТС / ГТС / Объекты', '/list_melioration_systems'),
+    FunObject(Icons.settings_outlined, 'Мелиоративные объекты', 'Системы / ОР ГТС / ГТС / Объекты', '/list_melioration_systems'),
     FunObject(Icons.contact_page_rounded, 'Заявки на работы', 'Реестр зарегистрированных заявок', '/list_applications'),
     FunObject(Icons.edit, 'Актуализация тех. состояния', 'Реестр зарегистрированных изменений', '/list_technical_conditions'),
   ];
