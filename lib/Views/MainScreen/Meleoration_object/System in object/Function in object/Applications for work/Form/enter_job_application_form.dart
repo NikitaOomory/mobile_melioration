@@ -129,7 +129,7 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            application == null ? 'Создать заявку' : 'Редактировать заявку'),
+            'Заявка на работу'),
       ),
       body: SingleChildScrollView( child: Padding(
         padding: const EdgeInsets.all(16.0),

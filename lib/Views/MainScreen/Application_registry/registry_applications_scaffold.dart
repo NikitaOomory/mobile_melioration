@@ -97,8 +97,9 @@ class _RegestryApplicationState extends State<RegestryApplication> {
 
   Future<void> _fetchApplications() async {
     const String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
-    String username = 'ИТР ФГБУ';
-    String password = '1234';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
     try {
       final response = await _dio.get(url, options: Options(
         headers: {

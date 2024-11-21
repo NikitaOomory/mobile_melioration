@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../UI-kit/Widgets/CardMainFun/card_main_fun.dart';
 import '../../../../UI-kit/Widgets/card_melio_objects.dart';
@@ -39,8 +40,9 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
 
   Future<void> _fetchObjectsOfReclamationSystem() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getObjectsOfReclamationSystem';
-    String username = 'ИТР ФГБУ';
-    String password = '1234';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
     final Map<String, dynamic> requestBody = {
       "ref": refSystem,
     };

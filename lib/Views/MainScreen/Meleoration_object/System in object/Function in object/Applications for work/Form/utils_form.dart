@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UtilsForm{
 
@@ -10,8 +11,9 @@ class UtilsForm{
       List<File> attachedFiles) async {
 
     const String url = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=WriteApplicationForWork';
-    String username = 'ИТР ФГБУ';
-    String password = '1234';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
 
     DateTime startDate = DateTime.now();
 
@@ -23,10 +25,6 @@ class UtilsForm{
       "startJobDate": startJobDate,
       "endJobDate": endJobDate,
       "description": description,
-
-      // "startDate": "2024-11-12T00:00:00-05:00",
-      // "startJobDate": "2024-11-12T00:00:00-05:00",
-      // "endJobDate": "2024-11-16T00:00:00-05:00",
     };
 
     try {
@@ -91,8 +89,9 @@ class UtilsForm{
 
   Future<void> uploadFiles(String ref, List<File> files) async {
     final dio = Dio();
-    String username = 'ИТР ФГБУ';
-    String password = '1234';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
     String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
     dio.options.headers["Authorization"] = "Basic " + base64Encode(utf8.encode('$username:$password'));

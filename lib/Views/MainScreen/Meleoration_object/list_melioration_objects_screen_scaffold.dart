@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Models/my_arguments.dart';
 import '../../../UI-kit/Widgets/card_melio_objects.dart';
@@ -28,10 +29,13 @@ class _ListMeliorationObjectsScreenScaffoldState
     _fetchReclamations(); // Загружаем данные при инициализации
   }
 
+
   Future<void> _fetchReclamations() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getReclamationSystem';
-    String username = 'ИТР ФГБУ';
-    String password = '1234';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
+    print('Данные пользователя: $username, $password');
 
     try {
       final response = await _dio.get(

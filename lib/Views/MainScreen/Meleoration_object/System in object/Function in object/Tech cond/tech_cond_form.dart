@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/my_arguments.dart';
 
@@ -59,8 +60,9 @@ class _TechCondFormState extends State<TechCondForm> {
 
   Future<void> _sendReclamationData(String tech, String num) async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteReclamationSystem';
-    String username = 'ИТР ФГБУ'; // Учетные данные
-    String password = '1234'; // Учетные данные
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
 
     // Тело запроса
     final Map<String, dynamic> requestBody = {

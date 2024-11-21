@@ -144,8 +144,9 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
 
   Future<void> _fetchApplications() async {
     final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
-    String username = 'ИТР ФГБУ'; // Замените на ваши учетные данные
-    String password = '1234'; // Замените на ваши учетные данные
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
 
     try {
       final response = await _dio.get(

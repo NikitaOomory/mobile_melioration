@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Card(
               color: Colors.white,
-              elevation: 6,
+              elevation: 7,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
@@ -164,25 +164,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text("Войти", style: TextStyle(color: Colors.white, fontSize: 16),),
                     ),
                     SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: (){
+                    Text('Ещё нет учётной записи?'),
+                    TextButton(
+                      onPressed: () {
                         _launchURL();
                       },
-                      style: ElevatedButton.styleFrom(
-                        side: const BorderSide(
+                      child: Text(
+                        "Зарегистрироваться",
+                        style: TextStyle(
                           color: Color.fromARGB(255, 0, 78, 167),
-                          width: 2
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline, // Подчеркивание текста
+                          decorationColor: Color.fromARGB(255, 0, 78, 167), // Синий цвет подчеркивания
                         ),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        minimumSize: const Size(double.infinity, 40),
                       ),
-                      child: Row(children: [
-                        Image.asset('assets/img_1.png', width: 30, height: 30,),
-                        const Text(" Войти через Госуслуги (ЕСИА)", style: TextStyle(color: Color.fromARGB(255, 0, 78, 167), fontSize: 15, fontWeight: FontWeight.bold),),
-                      ],)
                     ),
                   ],
                 ),
