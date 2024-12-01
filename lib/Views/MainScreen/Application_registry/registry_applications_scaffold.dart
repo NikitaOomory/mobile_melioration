@@ -259,7 +259,19 @@ class _RegestryApplicationState extends State<RegestryApplication> {
                 author: application.owner,
                 onTap: () {
                   Navigator.of(context).pushNamed('/enter_job_application_form',
-                      arguments: MyArguments('', '',application, application.objectName));
+                      arguments: MyArguments('','', Application(
+                        ref:'',
+                        owner: application.owner,
+                        reclamationSystem: '',
+                        hydraulicStructure: '',
+                        objectName: application.objectName,
+                        startDate: application.startDate,
+                        startJobDate: application.startJobDate,
+                        endJobDate: application.endJobDate,
+                        description:  application.description,
+                        number: application.number,
+                        status: application.status,),
+                    application.objectName));
                 },
                 //todo: роверить переход из реестра на форму заполнения заявки (условие - чтобы с ними ничего нельзя было сделать, т.к. эти заявки уже на сервере)
               );
