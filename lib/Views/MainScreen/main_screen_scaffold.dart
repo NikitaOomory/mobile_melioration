@@ -19,8 +19,8 @@ class _MainScreenScaffold extends State<MainScreenScaffold>{
 
   List<FunObject> arrayFunction = [
     FunObject(Icons.settings_outlined, 'Мелиоративные объекты', 'Системы / ОР ГТС / ГТС / Объекты', '/list_melioration_systems'),
-    FunObject(Icons.contact_page_rounded, 'Список зарегистрированных заявок', 'Реестр зарегистрированных заявок', '/list_applications'),
-    FunObject(Icons.edit, 'Список актуализаций тех. сосотояния', 'Реестр зарегистрированных изменений', '/list_technical_conditions'),
+    FunObject(Icons.contact_page_rounded, 'Список заявок на работы', 'Список зарегистрированных заявок', '/list_applications'),
+    FunObject(Icons.edit, 'Список актуализаций', 'Список зарегистрированных изменений', '/list_technical_conditions'),
   ];
 
   @override
