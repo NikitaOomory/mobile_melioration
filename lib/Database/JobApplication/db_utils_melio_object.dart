@@ -47,7 +47,6 @@ class DBUtilsJobApplications{
         return i; // Возвращаем индекс найденной задачи
       }
     }
-
     return -1; // Если не найден, возвращаем -1
   }
 }

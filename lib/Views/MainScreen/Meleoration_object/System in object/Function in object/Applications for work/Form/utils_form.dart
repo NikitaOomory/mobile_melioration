@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UtilsForm{
@@ -10,7 +11,6 @@ class UtilsForm{
       String startJobDate, String endJobDate, String description, Dio dio,
       List<File> attachedFiles) async {
 
-    const String url = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=WriteApplicationForWork';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
@@ -29,7 +29,7 @@ class UtilsForm{
 
     try {
       final response = await dio.post(
-        url,
+        ServerRoutes.WRITE_APPLICATION_FOR_WORK,
         data: jsonEncode(requestBody), // Отправка тела запроса
         options: Options(
           headers: {
@@ -92,7 +92,6 @@ class UtilsForm{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
-    String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteFileApplicationForWork'; // Установите базовую аутентификацию
 
     dio.options.headers["Authorization"] = "Basic " + base64Encode(utf8.encode('$username:$password'));
 
@@ -108,7 +107,7 @@ class UtilsForm{
         });
 
         // Отправляем POST-запрос
-        final response = await dio.post(url, data: formData);
+        final response = await dio.post(ServerRoutes.WRITE_FILE_APPLICATION_FOR_WORK, data: formData);
         print(formData.fields); // Выводит поля формы
 
         // Обрабатываем ответ

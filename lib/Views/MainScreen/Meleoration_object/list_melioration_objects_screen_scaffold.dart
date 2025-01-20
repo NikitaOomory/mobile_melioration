@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Models/my_arguments.dart';
@@ -31,7 +32,6 @@ class _ListMeliorationObjectsScreenScaffoldState
 
 
   Future<void> _fetchReclamations() async {
-    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getReclamationSystem';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
@@ -39,7 +39,7 @@ class _ListMeliorationObjectsScreenScaffoldState
 
     try {
       final response = await _dio.get(
-        url,
+        ServerRoutes.GET_RECLAMATION_SYSTEM,
         options: Options(
           headers: {
             'Authorization':

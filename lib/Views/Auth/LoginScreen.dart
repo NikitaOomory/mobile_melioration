@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_melioration/server_routes.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,11 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> login(String username, String password,) async {
-    const String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=login';
     final Dio dio = Dio();
     try {
       final response = await dio.get(
-        url,
+        ServerRoutes.LOGIN_ROUTE,
         options: Options(
           headers: {
             'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',

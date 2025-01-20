@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
+import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../UI-kit/Widgets/CardMainFun/card_main_fun.dart';
@@ -39,7 +40,6 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
   }
 
   Future<void> _fetchObjectsOfReclamationSystem() async {
-    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getObjectsOfReclamationSystem';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
@@ -51,7 +51,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
     });
     try {
       final response = await _dio.post(
-        url,
+        ServerRoutes.GET_OBJECTS_OF_RECLAMATION_SYSTEM,
         data: jsonEncode(requestBody),
         options: Options(
           headers: {

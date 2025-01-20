@@ -59,7 +59,7 @@ class _TechCondFormState extends State<TechCondForm> {
   final Dio _dio = Dio();
 
   Future<void> _sendReclamationData(String tech, String num) async {
-    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=WriteReclamationSystem';
+    final String url = 'https://melio.mcx.ru/melio/hs/api/?typerequest=WriteReclamationSystem';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');

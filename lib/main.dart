@@ -7,8 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'routes.dart';
 
-
-void main() async{
+void main() async {
   Intl.defaultLocale = 'ru_RU';
   await Hive.initFlutter();
   Hive.registerAdapter(JobApplicationAdapter());
@@ -17,7 +16,7 @@ void main() async{
 }
 
 class MobileMelioration extends StatelessWidget {
-   const MobileMelioration({super.key});
+  const MobileMelioration({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class MobileMelioration extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor:const Color.fromARGB(255, 0, 78, 167),
+        primaryColor: const Color.fromARGB(255, 0, 78, 167),
         appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
         scaffoldBackgroundColor: Colors.white,
       ),
@@ -38,5 +37,3 @@ class MobileMelioration extends StatelessWidget {
     );
   }
 }
-
-

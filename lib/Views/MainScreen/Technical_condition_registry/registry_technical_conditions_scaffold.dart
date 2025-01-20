@@ -24,7 +24,7 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
   }
 
   Future<void> _fetchData() async {
-    String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getHistoryReclamationSystem';
+    String url = 'https://melio.mcx.ru/melio/hs/api/?typerequest=getHistoryReclamationSystem';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
@@ -69,7 +69,7 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Ошибка при загрузке данных: $e';
+        _errorMessage = 'Нет данных для отображения.';
       });
     } finally {
       setState(() {

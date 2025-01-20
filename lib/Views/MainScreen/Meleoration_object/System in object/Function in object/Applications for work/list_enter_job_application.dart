@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
+import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/melioration_object_model.dart';
@@ -143,14 +144,13 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
 
 
   Future<void> _fetchApplications() async {
-    final String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
 
     try {
       final response = await _dio.get(
-        url,
+        ServerRoutes.GET_APPLICATIONS_FOR_WORK,
         options: Options(
           headers: {
             'Authorization':

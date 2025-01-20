@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Models/my_arguments.dart';
+import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/user.dart';
@@ -95,12 +96,11 @@ class _RegestryApplicationState extends State<RegestryApplication> {
 
 
   Future<void> _fetchApplications() async {
-    const String url = 'https://melio.mcx.ru/melio_pmi_login/hs/api/?typerequest=getApplicationsForWork';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
     try {
-      final response = await _dio.get(url, options: Options(
+      final response = await _dio.get(ServerRoutes.GET_APPLICATIONS_FOR_WORK, options: Options(
         headers: {
           'Authorization': 'Basic ${base64Encode(utf8.encode('$username:$password'))}',
         },
