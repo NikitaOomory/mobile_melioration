@@ -22,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   User userClass = User(status: '', name: '', role: '');
-  final Uri _url = Uri.parse('https://melio.mcx.ru/melio_site/');
 
   @override
   void initState() {
@@ -188,9 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _launchURL() async {
-    final Uri url = Uri.parse('https://melio.mcx.ru/melio_pmi');
+    final Uri url = Uri.parse('https://melio.mcx.ru/melio_esia/');
     if (!await launchUrl(url)) {
-      throw Exception('Could not launch $_url');
+      throw Exception('Could not launch $url');
     }
   }
 
