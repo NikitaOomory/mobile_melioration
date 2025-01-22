@@ -7,35 +7,9 @@ import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/user.dart';
+import '../../../Models/application.dart';
 import '../../../UI-kit/Widgets/JobApplicationCard.dart';
 
-class Application {
-  String ref;
-  String owner;
-  String reclamationSystem;
-  String hydraulicStructure;
-  String objectName;
-  String startDate;
-  String startJobDate;
-  String endJobDate;
-  String description;
-  String number;
-  String status;
-
-  Application({
-    required this.ref,
-    required this.owner,
-    required this.reclamationSystem,
-    required this.hydraulicStructure,
-    required this.objectName,
-    required this.startDate,
-    required this.startJobDate,
-    required this.endJobDate,
-    required this.description,
-    required this.number,
-    required this.status,
-  });
-}
 
 class RegestryApplication extends StatefulWidget {
   @override
@@ -179,6 +153,7 @@ class _RegestryApplicationState extends State<RegestryApplication> {
               number: number,
               status: status,
             ));
+            print('ref - $ref, owner - $owner, description - $description, number - $number');
           }
 
           // Копируем все данные в _filteredApplications
@@ -242,7 +217,7 @@ class _RegestryApplicationState extends State<RegestryApplication> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error.isNotEmpty
-          ? const Center(child: Text('На данный объект заявки отсутствуют'))
+          ? const Center(child: Text('Объекты отсутствуют'))
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: RefreshIndicator(
@@ -273,7 +248,7 @@ class _RegestryApplicationState extends State<RegestryApplication> {
                         status: application.status,),
                     application.objectName));
                 },
-                //todo: роверить переход из реестра на форму заполнения заявки (условие - чтобы с ними ничего нельзя было сделать, т.к. эти заявки уже на сервере)
+                //todo: проверить переход из реестра на форму заполнения заявки (условие - чтобы с ними ничего нельзя было сделать, т.к. эти заявки уже на сервере)
               );
             },
           ),

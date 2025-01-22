@@ -21,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final ShowSnackBar _showSnackBar = ShowSnackBar();
   User userClass = User(status: '', name: '', role: '');
   final Uri _url = Uri.parse('https://melio.mcx.ru/melio_site/');
 
@@ -29,6 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
+    if (username != null && password != null) {
+      await login(username, password);
+    }
   }
 
   Future<void> login(String username, String password,) async {
@@ -48,35 +56,24 @@ class _LoginScreenState extends State<LoginScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('username', username);
         await prefs.setString('password', password);
-
         print('Ответ от сервера: ${response.data}');
-
         // Десериализация ответа в объект User
         User user = userClass.parseUserFromResponse(response.data);
-
         // Сохранение объекта User в SharedPreferences
         String userData = jsonEncode(user.toJson());
         await prefs.setString('userData', userData);
-        _showSnackBar.showSnackBar(context, 'Вы успешно авторизовались!');
+        ShowSnackBar.showSnackBar(context, 'Вы успешно авторизовались!');
         Navigator.of(context).pushReplacementNamed('/main_screen');
       } else {
         print(response.statusCode);
-        _showSnackBar.showSnackBar(context, 'Ошибка авторизации: ${response.statusCode}');
+        ShowSnackBar.showSnackBar(context, 'Ошибка авторизации: ${response.statusCode}');
       }
     } catch (e) {
       print('Ошибка: $e');
-      _showSnackBar.showSnackBar(context, 'Ошибка: ${e.toString()}');
+      ShowSnackBar.showSnackBar(context, 'Ошибка авторизации: 5хх');
     }
   }
 
-  Future<void> _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString('username');
-    String? password = prefs.getString('password');
-    if (username != null && password != null) {
-      await login(username, password);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         _launchURL();
                       },
-                      child: Text(
+                      child: const Text(
                         "Зарегистрироваться",
                         style: TextStyle(
                           color: Color.fromARGB(255, 0, 78, 167),

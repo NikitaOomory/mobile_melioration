@@ -162,6 +162,7 @@ class _AppBarMainScreen extends State<AppBarMainScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(height: 30, alignment: Alignment.topRight, child: Text('App version: 1.0.0', style: TextStyle(color: Colors.grey)),),
                 Row(
                   children: [
                     const Icon(Icons.document_scanner, color: Color.fromARGB(255, 0, 78, 167)),

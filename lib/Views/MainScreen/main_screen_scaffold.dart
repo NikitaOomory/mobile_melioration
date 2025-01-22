@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../../UI-kit/Widgets/CardMainFun/card_main_fun.dart';
 import '../../UI-kit/Widgets/CardMainFun/model_function_card.dart';
 import '../../UI-kit/Widgets/app_bar_main_screen.dart';

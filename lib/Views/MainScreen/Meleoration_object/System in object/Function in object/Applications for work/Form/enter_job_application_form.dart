@@ -9,9 +9,9 @@ import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object
 import 'package:mobile_melioration/Models/melioration_object_model.dart';
 import 'package:mobile_melioration/Views/MainScreen/Meleoration_object/System%20in%20object/Function%20in%20object/Applications%20for%20work/Form/utils_form.dart';
 
+import '../../../../../../../Models/application.dart';
 import '../../../../../../../Models/my_arguments.dart';
 import '../../../../../../../UI-kit/Widgets/show_snack_bar.dart';
-import '../list_enter_job_application.dart';
 
 class EnterJobApplicationForm extends StatefulWidget {
   @override
@@ -19,7 +19,6 @@ class EnterJobApplicationForm extends StatefulWidget {
 }
 
 class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
-  final ShowSnackBar showSnackBar = ShowSnackBar();
   DBUtilsJobApplications dbUtilsJobApplications = DBUtilsJobApplications();
   final Dio _dio = Dio();
   bool isUpdate = false;
@@ -306,7 +305,7 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                     Navigator.of(context).pop('/list_enter_job_application');
                   }
                   else{
-                    showSnackBar.showSnackBar(context, 'Заявка уже отправлена, её нельзя редактировать.');
+                    ShowSnackBar.showSnackBar(context, 'Заявка уже отправлена, её нельзя редактировать.');
                   }
                 },
                 child: const Text('Сохранить проект', style: TextStyle(color: Color.fromARGB(255, 0, 78, 167)),),
@@ -359,7 +358,7 @@ class _EnterJobApplicationFormState extends State<EnterJobApplicationForm> {
                     print('Мы удалили заявку с индексом $indexObjectFromDB из БД');
                     Navigator.of(context).pop('/list_enter_job_application');
                   } else{
-                    showSnackBar.showSnackBar(context, 'Заявка уже отправлена.');
+                    ShowSnackBar.showSnackBar(context, 'Заявка уже отправлена.');
                   }
                 },
                 child: const Text('Отправить'),

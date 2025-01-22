@@ -2,42 +2,17 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_melioration/Database/JobApplication/db_utils_melio_object.dart';
 import 'package:mobile_melioration/server_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../../Models/application.dart';
 import '../../../../../../Models/melioration_object_model.dart';
 import '../../../../../../Models/my_arguments.dart';
 import '../../../../../../Models/user.dart';
 import '../../../../../../UI-kit/Widgets/JobApplicationCard.dart';
 
-class Application {
-  String ref;
-  String owner;
-  String reclamationSystem;
-  String hydraulicStructure;
-  String startDate;
-  String startJobDate;
-  String endJobDate;
-  String description;
-  String number;
-  String status;
-
-  Application({
-    required this.ref,
-    required this.owner,
-    required this.reclamationSystem,
-    required this.hydraulicStructure,
-    required this.startDate,
-    required this.startJobDate,
-    required this.endJobDate,
-    required this.description,
-    required this.number,
-    required this.status,
-  });
-}
 
 class ListEnterJobApplication extends StatefulWidget {
   @override
@@ -97,6 +72,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
         owner: '',
         reclamationSystem: '', // Например, тип объекта
         hydraulicStructure: meliorationObject.nextUnit, // Например, адрес
+        objectName: '',
         startDate: '2024-10-26',
         startJobDate: meliorationObject.startJobDate,
         endJobDate: meliorationObject.endJobDate,
@@ -224,6 +200,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
               owner: owner,
               reclamationSystem: reclamationSystem,
               hydraulicStructure: hydraulicStructure,
+              objectName: '',
               startDate: startDate,
               startJobDate: startJobDate,
               endJobDate: endJobDate,
@@ -347,6 +324,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
                         owner: user.name,
                         reclamationSystem: '',
                         hydraulicStructure: refObject,
+                        objectName: '',
                         startDate: DateTime.now().toIso8601String(), // Замените на актуальную дату
                         startJobDate: DateTime.now().toIso8601String(), // Поставьте актуальную дату
                         endJobDate: DateTime.now().add(Duration(days: 7)).toIso8601String(), // Например, через 7 дней
