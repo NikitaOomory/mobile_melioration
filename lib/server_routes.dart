@@ -1,5 +1,6 @@
 class ServerRoutes{
 
+  //Тут выбираем хост
   // static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio/hs/api/?typerequest=';
   //прод роут
 
