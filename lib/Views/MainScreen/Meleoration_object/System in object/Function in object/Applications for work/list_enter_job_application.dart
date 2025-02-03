@@ -148,7 +148,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
 
           // Парсим данные в объекты Application
           for (var item in valueArray) {
-            String ref = '';
+            String ref  = '';
             String owner = '';
             String reclamationSystem = '';
             String hydraulicStructure = '';
@@ -194,7 +194,7 @@ class _ListEnterJobApplicationState extends State<ListEnterJobApplication> {
               }
             }
 
-            // Создаем новый объект Application и добавляем его в список
+
             _applications.add(Application(
               ref: ref,
               owner: owner,

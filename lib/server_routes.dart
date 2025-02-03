@@ -1,7 +1,10 @@
 class ServerRoutes{
 
-  static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio/hs/api/?typerequest=';
-  //главный роут
+  // static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio/hs/api/?typerequest=';
+  //прод роут
+
+  static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=';
+  //ПМИ роут
 
   static const String LOGIN_ROUTE = '${SERVER_ROUTE}login';
   //авторизация
