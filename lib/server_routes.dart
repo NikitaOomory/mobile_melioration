@@ -1,10 +1,10 @@
 class ServerRoutes{
 
   //Тут выбираем хост
-  // static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio/hs/api/?typerequest=';
-  //прод роут
+  static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio/hs/api/?typerequest=';
+  //прод роут "3ZP1iO"
 
-  static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=';
+  //static const String SERVER_ROUTE = 'https://melio.mcx.ru/melio_pmi_login//hs/api/?typerequest=';
   //ПМИ роут
 
   static const String LOGIN_ROUTE = '${SERVER_ROUTE}login';
@@ -22,3 +22,5 @@ class ServerRoutes{
   static const String WRITE_RECLAMATION_SYSTEM = '${SERVER_ROUTE}WriteReclamationSystem';
   //запись актуализации технического состояния
 }
+
+//начало тестирования и баг фиксов + подготовка к демонстрации
