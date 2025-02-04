@@ -51,10 +51,10 @@ class _TechCondFormState extends State<TechCondForm> {
   final List<String> _conditions = [
     'Нормативное',
     'Работоспособное',
-    'ОграниченноРаботоспособное',
+    'Ограниченно работоспособное',
     'Аварийное',
     'Требующее капитального ремонта',
-    'Подлежащие ликвидации',
+    'Подлежащее ликвидации',
   ];
 
   final Dio _dio = Dio();
@@ -64,11 +64,10 @@ class _TechCondFormState extends State<TechCondForm> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
-
     // Тело запроса
     final Map<String, dynamic> requestBody = {
       "ref": refObject,
-      "TechnicalCondition": tech,
+      "TechnicalCondition": adapterTechnicalCondition(tech),
       "ActualWear": int.parse(num), // Преобразуем строку в число
     };
 
@@ -95,6 +94,19 @@ class _TechCondFormState extends State<TechCondForm> {
       }
     } catch (e) {
       print('Ошибка: $e'); // Обработка ошибок
+    }
+  }
+
+  String adapterTechnicalCondition(String srcTechnicalCondition){
+    switch(srcTechnicalCondition){
+    case 'Ограниченно работоспособное':
+      return 'ОграниченноРаботоспособное';
+    case 'Требующее капитального ремонта':
+      return 'ТребующееКапитальногоРемонта';
+    case 'Подлежащее ликвидации':
+      return 'ПодлежащееЛиквидации';
+    default:
+      return srcTechnicalCondition;
     }
   }
 

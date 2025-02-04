@@ -134,7 +134,7 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
           children: [
             TextField(
               onChanged: _filterData,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Поиск...',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
