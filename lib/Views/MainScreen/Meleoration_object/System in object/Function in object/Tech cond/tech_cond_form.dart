@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_melioration/UI-kit/Widgets/show_snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../Models/my_arguments.dart';
@@ -95,19 +96,6 @@ class _TechCondFormState extends State<TechCondForm> {
     } catch (e) {
       print('Ошибка: $e'); // Обработка ошибок
     }
-  }
-
-  void _showSnackbar(BuildContext context) {
-    final snackBar = SnackBar(
-      content: Text('Состояние обновлено'),
-      action: SnackBarAction(
-        label: 'Закрыть',
-        onPressed: () {
-          // Код, который будет выполнен при нажатии на кнопку
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 
@@ -226,7 +214,7 @@ class _TechCondFormState extends State<TechCondForm> {
                       ),
                       onPressed: () {
                         _sendReclamationData(_selectedCondition.toString(), _wearController.text); // Передаем текст из контроллера
-                        _showSnackbar(context);
+                        ShowSnackBar.showSnackBar(context, 'Состояние обновлено');
                         print('----------------------------------------');
                         print(refObject);
                         print('----------------------------------------');

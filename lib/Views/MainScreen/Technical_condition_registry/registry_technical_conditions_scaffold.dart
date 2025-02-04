@@ -125,7 +125,8 @@ class _ListTechnicalConditionsScaffoldState extends State<ListTechnicalCondition
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Реестр актуализации'),
+        title: const Text('Список актуализаций'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

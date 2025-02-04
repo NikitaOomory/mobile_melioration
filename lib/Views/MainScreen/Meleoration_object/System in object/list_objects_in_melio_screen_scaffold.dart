@@ -131,7 +131,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
           CardMainFun(
             icon: Icons.contact_page_rounded,
             title: 'Актуализация тех. состояния',
-            description: 'Внесение изменений от техническом состоянии',
+            description: 'Внесение изменений о техническом состоянии',
             onTap: () {
               Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
             },
@@ -157,7 +157,7 @@ class _ListObjectsInMelioScreenScaffoldState extends State<ListObjectsInMelioScr
             CardMainFun(
               icon: Icons.contact_page_rounded,
               title: 'Актуализация тех. состояния',
-              description: 'Внесение изменений от техническом состоянии',
+              description: 'Внесение изменений о техническом состоянии',
               onTap: () {
                 Navigator.of(context).pushNamed('/tech_cond_form', arguments: MyArguments(refSystem!, refSystem!, nameSystem, '1'));
               },

@@ -189,7 +189,8 @@ class _RegestryApplicationState extends State<RegestryApplication> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ресстр заявок на работы', maxLines: 3, style: TextStyle(fontSize: 16),),
+        title: const Text('Список заявок на работы'),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
