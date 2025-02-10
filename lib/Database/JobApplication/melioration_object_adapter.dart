@@ -8,7 +8,7 @@ class JobApplicationAdapter extends TypeAdapter<MeliorationObjectModel> {
 
   @override
   MeliorationObjectModel read(BinaryReader reader) {
-
+    final id = reader.read() as String; // Чтение поля id
     final name = reader.read() as String;
     final typeObject = reader.read() as String;
     final address = reader.read() as String;
@@ -26,12 +26,30 @@ class JobApplicationAdapter extends TypeAdapter<MeliorationObjectModel> {
     final prevUnit = reader.read() as String;
     final nextUnit = reader.read() as String;
 
-    return MeliorationObjectModel(name, typeObject, address,author,status,ein,startDate,
-    endDate,description,files,techHealth,techConditional, startJobDate, endJobDate, prevUnit, nextUnit);
+    return MeliorationObjectModel(
+      id, // Передача поля id
+      name,
+      typeObject,
+      address,
+      author,
+      status,
+      ein,
+      startDate,
+      endDate,
+      description,
+      files,
+      techHealth,
+      techConditional,
+      startJobDate,
+      endJobDate,
+      prevUnit,
+      nextUnit,
+    );
   }
 
   @override
   void write(BinaryWriter writer, MeliorationObjectModel obj) {
+    writer.write(obj.id); // Запись поля id
     writer.write(obj.name);
     writer.write(obj.typeObject);
     writer.write(obj.adress);
